@@ -39,30 +39,39 @@ public class Connect4 {
 	public boolean isWin(Board board) {		
 		if (checkHorizontal(board)) return true;
         if (checkVerticle(board)) return true;
-        checkDiagFor();
-        checkDiagBack();
+        if (checkDiagFor(board)) return true;
+        if (checkDiagBack(board)) return true;
 		return false;
 	}
 
     private boolean checkVerticle(Board board) {
-        //To change body of created methods use File | Settings | File Templates.
+        for (int i = board.getNoRows(); i >= 3; i--) {
+            for (int j = 0; j < board.getNoCols(); j++) {
+                if (board.getLocationState(new Location(i, j)) == currentPlayer.getPlayerState()
+                        && board.getLocationState(new Location(i - 1, j)) == currentPlayer.getPlayerState()
+                        && board.getLocationState(new Location(i - 2, j)) == currentPlayer.getPlayerState()
+                        && board.getLocationState(new Location(i - 3, j)) == currentPlayer.getPlayerState())
+                    return true;
+            }
+        }
+        return false;
     }
 
-    private void checkDiagBack() {
-        //To change body of created methods use File | Settings | File Templates.
+    private boolean checkDiagBack(Board board) {
+        return false;
     }
 
-    private void checkDiagFor() {
-        //To change body of created methods use File | Settings | File Templates.
+    private boolean checkDiagFor(Board board) {
+        return false;
     }
 
     private boolean checkHorizontal(Board board) {
         for (int i = 0; i < board.getNoRows(); i++) {
             for (int j = 0; j < board.getNoCols() - 3; j++) {
                 if (board.getLocationState(new Location(i, j)) == currentPlayer.getPlayerState()
-                        && (board.getLocationState(new Location(i, j + 1)) == currentPlayer.getPlayerState()
-                        && (board.getLocationState(new Location(i, j + 2)) == currentPlayer.getPlayerState()
-                        && (board.getLocationState(new Location(i, j + 3))) == currentPlayer.getPlayerState())))
+                        && board.getLocationState(new Location(i, j + 1)) == currentPlayer.getPlayerState()
+                        && board.getLocationState(new Location(i, j + 2)) == currentPlayer.getPlayerState()
+                        && board.getLocationState(new Location(i, j + 3)) == currentPlayer.getPlayerState())
                 return true;
             }
         }
