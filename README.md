@@ -12,8 +12,8 @@ The user(player 1) will take the first turn and the computer(player 2) will take
 
 After each turn, the program should check for the following:
 
-*A winner (four of the current players discs next to each other vertically, horizontally, or diagonally).
+* A winner (four of the current players discs next to each other vertically, horizontally, or diagonally).
 
-*A draw (no winner and all columns full).
+* A draw (no winner and all columns full).
 
-*The board must be represented as a 2D array. The computer player skeleton class is here. You must NOT change the interface of this class however you must include your student number in the ComputerPlayer class name.
+* The board must be represented as a 2D array. The computer player skeleton class is here. You must NOT change the interface of this class however you must include your student number in the ComputerPlayer class name.
