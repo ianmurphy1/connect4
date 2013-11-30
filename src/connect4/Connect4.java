@@ -7,18 +7,17 @@ package connect4;
  */
 public class Connect4 {
 
-	private ComputerPlayer20057028 computer;
-    private HumanPlayer human;
+	private IPlayer human, computer;
 	private Board board;
 	private IPlayer currentPlayer;
 	private int numTurns = 0;
 
-	public Connect4(HumanPlayer human, ComputerPlayer20057028 computer, Board board) {
-		this.human = human;
-		this.computer = computer;
-		this.board = board;
-		this.currentPlayer = human;
-	}
+    public Connect4(IPlayer human, IPlayer computer, Board board) {
+        this.human = human;
+        this.computer = computer;
+        this.board = board;
+        this.currentPlayer = human;
+    }
 
 	
 	/**
@@ -38,26 +37,40 @@ public class Connect4 {
 	 * @return boolean to detect winner
 	 */
 	public boolean isWin(Board board) {
-        if (numTurns < 7) return false;
-		return checkVerticle(board) || checkHorizontal(board) || checkDiagFor(board) || checkDiagBack(board);
+       //if (numTurns < 7) return false;
+		return checkVertical(board)|| checkHorizontal(board) || checkDiagFor(board) || checkDiagBack(board);
 	}
 
-    private boolean checkVerticle(Board board) {
-        for (int i = board.getNoRows() - 1; i >= 3; i--) { //Start from the bottom and work up.
-            for (int j = 0; j < board.getNoCols(); j++) {
+    private boolean checkHorizontal(Board board) {
+        for (int i = 0; i < board.getNoCols() - 4; i++) {
+            for (int j = 0; j < board.getNoRows(); j++) {
                 if (board.getLocationState(new Location(i, j)) == currentPlayer.getPlayerState()
-                        && board.getLocationState(new Location(i - 1, j)) == currentPlayer.getPlayerState()
-                        && board.getLocationState(new Location(i - 2, j)) == currentPlayer.getPlayerState()
-                        && board.getLocationState(new Location(i - 3, j)) == currentPlayer.getPlayerState())
+                        && board.getLocationState(new Location(i + 1, j)) == currentPlayer.getPlayerState()
+                        && board.getLocationState(new Location(i + 2, j)) == currentPlayer.getPlayerState()
+                        && board.getLocationState(new Location(i + 3, j)) == currentPlayer.getPlayerState())
                     return true;
             }
         }
         return false;
     }
 
+    private boolean checkVertical(Board board) {
+        for (int i = 0; i < board.getNoCols(); i++) {
+            for (int j = board.getNoRows() - 1; j >= 3; j--) {
+                if (board.getLocationState(new Location(i, j)) == currentPlayer.getPlayerState()
+                        && board.getLocationState(new Location(i, j - 1)) == currentPlayer.getPlayerState()
+                        && board.getLocationState(new Location(i, j - 2)) == currentPlayer.getPlayerState()
+                        && board.getLocationState(new Location(i, j - 3)) == currentPlayer.getPlayerState())
+                    return true;
+            }
+        }
+
+        return false;
+    }
+
     private boolean checkDiagBack(Board board) {
-        for (int i = board.getNoRows() - 4; i >= 0; i--) {
-            for (int j = 0; j < board.getNoCols() - 3; j++) {
+        for (int i = 0; i < board.getNoCols() - 3; i++) {
+            for (int j = board.getNoRows() - 4; j >= 0; j--) {
                 if (board.getLocationState(new Location(i, j)) == currentPlayer.getPlayerState()
                         && board.getLocationState(new Location(i + 1, j + 1)) == currentPlayer.getPlayerState()
                         && board.getLocationState(new Location(i + 2, j + 2)) == currentPlayer.getPlayerState()
@@ -68,27 +81,16 @@ public class Connect4 {
         return false;
     }
 
-    private boolean checkDiagFor(Board board) {
-        for (int i = board.getNoRows() - 4; i >= 0; i--) {
-            for (int j = board.getNoCols() - 1; j > board.getNoCols() - 3; j--) {
-                if (board.getLocationState(new Location(i, j)) == currentPlayer.getPlayerState()
-                        && board.getLocationState(new Location(i + 1, j - 1)) == currentPlayer.getPlayerState()
-                        && board.getLocationState(new Location(i + 2, j - 2)) == currentPlayer.getPlayerState()
-                        && board.getLocationState(new Location(i + 3, j - 3)) == currentPlayer.getPlayerState())
-                    return true;
-            }
-        }
-        return false;
-    }
 
-    private boolean checkHorizontal(Board board) {
-        for (int i = 0; i < board.getNoRows(); i++) {
-            for (int j = 0; j < board.getNoCols() - 3; j++) {
+
+    private boolean checkDiagFor(Board board) {
+        for (int i =  board.getNoCols() - 1; i >= 3; i--) {
+            for (int j = board.getNoRows() - 4; j >= 0; j--) {
                 if (board.getLocationState(new Location(i, j)) == currentPlayer.getPlayerState()
-                        && board.getLocationState(new Location(i, j + 1)) == currentPlayer.getPlayerState()
-                        && board.getLocationState(new Location(i, j + 2)) == currentPlayer.getPlayerState()
-                        && board.getLocationState(new Location(i, j + 3)) == currentPlayer.getPlayerState())
-                return true;
+                        && board.getLocationState(new Location(i - 1, j + 1)) == currentPlayer.getPlayerState()
+                        && board.getLocationState(new Location(i - 2, j + 2)) == currentPlayer.getPlayerState()
+                        && board.getLocationState(new Location(i - 3, j + 3)) == currentPlayer.getPlayerState())
+                    return true;
             }
         }
         return false;
