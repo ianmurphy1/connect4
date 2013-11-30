@@ -14,12 +14,19 @@ public class HumanPlayer extends IPlayer {
 
     @Override
     public int getMove(Board board) {
-        int col = getInt("Enter column number: ");
-
+        int col = getInt("Enter Column Number");
+        while (true) {
+            if (isValid(col, board)) break;
+            col = getInt("Not valid. Reenter Valid Column");
+        }
         int x = checkCol(col, board);
         if (x >= 0) return x;
 
         return -1;
+    }
+
+    public boolean isValid(int col, Board board) {
+        return col > 0 && col < board.getNoCols();
     }
 
     private int checkCol(int col, Board board) {
