@@ -38,6 +38,7 @@ public class Connect4 {
 	 * @return boolean to detect winner
 	 */
 	public boolean isWin(Board board) {
+        if (numTurns < 7) return false;
 		return checkVerticle(board) || checkHorizontal(board) || checkDiagFor(board) || checkDiagBack(board);
 	}
 
@@ -55,12 +56,12 @@ public class Connect4 {
     }
 
     private boolean checkDiagBack(Board board) {
-        for (int i = 2; i >= 0; i--) {
-            for (int j = 3; j < board.getNoCols() - 1; j++) {
-                if (board.getLocationState(new Location(i, j - 3)) == currentPlayer.getPlayerState()
-                        && board.getLocationState(new Location(i + 1, j - 2)) == currentPlayer.getPlayerState()
-                        && board.getLocationState(new Location(i + 2, j - 1)) == currentPlayer.getPlayerState()
-                        && board.getLocationState(new Location(i + 3, j)) == currentPlayer.getPlayerState())
+        for (int i = board.getNoRows() - 4; i >= 0; i--) {
+            for (int j = 0; j < board.getNoCols() - 1; j++) {
+                if (board.getLocationState(new Location(i, j)) == currentPlayer.getPlayerState()
+                        && board.getLocationState(new Location(i + 1, j + 1)) == currentPlayer.getPlayerState()
+                        && board.getLocationState(new Location(i + 2, j + 2)) == currentPlayer.getPlayerState()
+                        && board.getLocationState(new Location(i + 3, j + 3)) == currentPlayer.getPlayerState())
                     return true;
             }
         }
@@ -68,12 +69,12 @@ public class Connect4 {
     }
 
     private boolean checkDiagFor(Board board) {
-        for (int i = 2; i >= 0; i--) {
-            for (int j = 3; j >= 0; j--) {
-                if (board.getLocationState(new Location(i, j - 3)) == currentPlayer.getPlayerState()
-                        && board.getLocationState(new Location(i + 1, j - 2)) == currentPlayer.getPlayerState()
-                        && board.getLocationState(new Location(i + 2, j - 1)) == currentPlayer.getPlayerState()
-                        && board.getLocationState(new Location(i + 3, j)) == currentPlayer.getPlayerState())
+        for (int i = board.getNoRows() - 4; i >= 0; i--) {
+            for (int j = board.getNoCols() - 1; j >= 0; j--) {
+                if (board.getLocationState(new Location(i, j)) == currentPlayer.getPlayerState()
+                        && board.getLocationState(new Location(i + 1, j - 1)) == currentPlayer.getPlayerState()
+                        && board.getLocationState(new Location(i + 2, j - 2)) == currentPlayer.getPlayerState()
+                        && board.getLocationState(new Location(i + 3, j - 3)) == currentPlayer.getPlayerState())
                     return true;
             }
         }
