@@ -15,13 +15,14 @@ public class HumanPlayer extends IPlayer {
     @Override
     public int getMove(Board board) {
         int col = getInt("Enter Column Number");
-        while (true) {
-            if (isValid(col, board)) break;
-            col = getInt("Not valid. Reenter Valid Column");
-        }
         int x = checkCol(col, board);
-        if (x >= 0) return x;
-        return -1;
+
+        while (true) {
+            if (isValid(col, board) && x >= 0) break;
+            col = getInt("Not valid. Reenter Valid Column");
+            x = checkCol(col, board);
+        }
+        return x;
     }
 
     public boolean isValid(int col, Board board) {
@@ -29,7 +30,7 @@ public class HumanPlayer extends IPlayer {
     }
 
     private int checkCol(int col, Board board) {
-        for (int i = board.getNoRows() - 1; i >= 0; i++) {
+        for (int i = board.getNoRows() - 1; i >= 0; i--) {
             if (board.getLocationState(new Location(col, i)) == LocationState.EMPTY) return col;
         }
         return -1;
