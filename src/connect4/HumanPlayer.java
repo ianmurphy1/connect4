@@ -21,12 +21,11 @@ public class HumanPlayer extends IPlayer {
         }
         int x = checkCol(col, board);
         if (x >= 0) return x;
-
         return -1;
     }
 
     public boolean isValid(int col, Board board) {
-        return col > 0 && col < board.getNoCols();
+        return col >= 0 && col < board.getNoCols();
     }
 
     private int checkCol(int col, Board board) {
