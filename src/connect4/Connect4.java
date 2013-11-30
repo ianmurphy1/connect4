@@ -57,7 +57,7 @@ public class Connect4 {
 
     private boolean checkDiagBack(Board board) {
         for (int i = board.getNoRows() - 4; i >= 0; i--) {
-            for (int j = 0; j < board.getNoCols() - 1; j++) {
+            for (int j = 0; j < board.getNoCols() - 3; j++) {
                 if (board.getLocationState(new Location(i, j)) == currentPlayer.getPlayerState()
                         && board.getLocationState(new Location(i + 1, j + 1)) == currentPlayer.getPlayerState()
                         && board.getLocationState(new Location(i + 2, j + 2)) == currentPlayer.getPlayerState()
@@ -70,7 +70,7 @@ public class Connect4 {
 
     private boolean checkDiagFor(Board board) {
         for (int i = board.getNoRows() - 4; i >= 0; i--) {
-            for (int j = board.getNoCols() - 1; j >= 0; j--) {
+            for (int j = board.getNoCols() - 1; j > board.getNoCols() - 3; j--) {
                 if (board.getLocationState(new Location(i, j)) == currentPlayer.getPlayerState()
                         && board.getLocationState(new Location(i + 1, j - 1)) == currentPlayer.getPlayerState()
                         && board.getLocationState(new Location(i + 2, j - 2)) == currentPlayer.getPlayerState()
