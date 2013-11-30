@@ -45,7 +45,7 @@ public class Connect4 {
 	}
 
     private boolean checkVerticle(Board board) {
-        for (int i = board.getNoRows(); i >= 3; i--) {
+        for (int i = board.getNoRows() - 1; i >= 3; i--) {
             for (int j = 0; j < board.getNoCols(); j++) {
                 if (board.getLocationState(new Location(i, j)) == currentPlayer.getPlayerState()
                         && board.getLocationState(new Location(i - 1, j)) == currentPlayer.getPlayerState()
