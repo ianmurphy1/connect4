@@ -7,12 +7,13 @@ package connect4;
  */
 public class Connect4 {
 
-	private IPlayer human, computer;
+	private ComputerPlayer20057028 computer;
+    private HumanPlayer human;
 	private Board board;
 	private IPlayer currentPlayer;
 	private int numTurns = 0;
 
-	public Connect4(IPlayer human, IPlayer computer, Board board) {
+	public Connect4(HumanPlayer human, ComputerPlayer20057028 computer, Board board) {
 		this.human = human;
 		this.computer = computer;
 		this.board = board;
@@ -36,16 +37,12 @@ public class Connect4 {
 	 * @param board to evaluate for winner 
 	 * @return boolean to detect winner
 	 */
-	public boolean isWin(Board board) {		
-		if (checkHorizontal(board)) return true;
-        if (checkVerticle(board)) return true;
-        if (checkDiagFor(board)) return true;
-        if (checkDiagBack(board)) return true;
-		return false;
+	public boolean isWin(Board board) {
+		return checkVerticle(board) || checkHorizontal(board) || checkDiagFor(board) || checkDiagBack(board);
 	}
 
     private boolean checkVerticle(Board board) {
-        for (int i = board.getNoRows() - 1; i >= 3; i--) {
+        for (int i = board.getNoRows() - 1; i >= 3; i--) { //Start from the bottom and work up.
             for (int j = 0; j < board.getNoCols(); j++) {
                 if (board.getLocationState(new Location(i, j)) == currentPlayer.getPlayerState()
                         && board.getLocationState(new Location(i - 1, j)) == currentPlayer.getPlayerState()
@@ -58,10 +55,28 @@ public class Connect4 {
     }
 
     private boolean checkDiagBack(Board board) {
+        for (int i = 2; i >= 0; i--) {
+            for (int j = 3; j < board.getNoCols() - 1; j++) {
+                if (board.getLocationState(new Location(i, j)) == currentPlayer.getPlayerState()
+                        && board.getLocationState(new Location(i + 1, j + 1)) == currentPlayer.getPlayerState()
+                        && board.getLocationState(new Location(i + 2, j + 2)) == currentPlayer.getPlayerState()
+                        && board.getLocationState(new Location(i + 3, j + 3)) == currentPlayer.getPlayerState())
+                    return true;
+            }
+        }
         return false;
     }
 
     private boolean checkDiagFor(Board board) {
+        for (int i = 2; i >= 0; i--) {
+            for (int j = 3; j >= 0; j--) {
+                if (board.getLocationState(new Location(i, j)) == currentPlayer.getPlayerState()
+                        && board.getLocationState(new Location(i - 1, j - 1)) == currentPlayer.getPlayerState()
+                        && board.getLocationState(new Location(i - 2, j - 2)) == currentPlayer.getPlayerState()
+                        && board.getLocationState(new Location(i - 3, j - 3)) == currentPlayer.getPlayerState())
+                    return true;
+            }
+        }
         return false;
     }
 
