@@ -37,11 +37,39 @@ public class Connect4 {
 	 * @return boolean to detect winner
 	 */
 	public boolean isWin(Board board) {		
-		//TODO
+		if (checkHorizontal(board)) return true;
+        if (checkVerticle(board)) return true;
+        checkDiagFor();
+        checkDiagBack();
 		return false;
 	}
 
-	/**
+    private boolean checkVerticle(Board board) {
+        //To change body of created methods use File | Settings | File Templates.
+    }
+
+    private void checkDiagBack() {
+        //To change body of created methods use File | Settings | File Templates.
+    }
+
+    private void checkDiagFor() {
+        //To change body of created methods use File | Settings | File Templates.
+    }
+
+    private boolean checkHorizontal(Board board) {
+        for (int i = 0; i < board.getNoRows(); i++) {
+            for (int j = 0; j < board.getNoCols() - 3; j++) {
+                if (board.getLocationState(new Location(i, j)) == currentPlayer.getPlayerState()
+                        && (board.getLocationState(new Location(i, j + 1)) == currentPlayer.getPlayerState()
+                        && (board.getLocationState(new Location(i, j + 2)) == currentPlayer.getPlayerState()
+                        && (board.getLocationState(new Location(i, j + 3))) == currentPlayer.getPlayerState())))
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
 	 * Checks for a draw
 	 * @return
 	 */
@@ -58,7 +86,7 @@ public class Connect4 {
 	public boolean takeTurn() {
 		int col = currentPlayer.getMove(board);
 
-		for (int i = 0; i < board.getNoRows(); i++) {
+		for (int i = board.getNoRows() - 1; i >= 0; i--) {
 			if (board.getLocationState(new Location(col, i)) == LocationState.EMPTY) {
 				board.setLocationState(new Location(col, i),
 						currentPlayer.getPlayerState());
