@@ -16,9 +16,9 @@ public class ComputerPlayer20057028 extends IPlayer {
 	
 	@Override
 	public int getMove(Board board) {
-
+        int x = (int) Math.random() * 5;
 		//TODO
-		return -1;
+		return x;
 		
 	}
 }

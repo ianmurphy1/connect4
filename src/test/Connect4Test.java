@@ -1,12 +1,8 @@
-package test;
+import static org.junit.Assert.*;
 
-import connect4.Board;
-import connect4.IPlayer;
-import connect4.Location;
-import connect4.LocationState;
 import org.junit.Test;
 
-import static org.junit.*;
+import connect4.*;
 
 public class Connect4Test {
 
@@ -26,7 +22,7 @@ public class Connect4Test {
 	
 
 	/**
-	 * THIS WILL FAIL UNTIL YOU CREATE YOUR COMPUTER PLAYER
+	 * THIS WILL FAIL UNTIL YOU CREATE YOUT COMPUTER PLAYER
 	 */
 	@Test
 	public void testComputerPlayer() {
