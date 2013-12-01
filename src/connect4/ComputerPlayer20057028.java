@@ -53,7 +53,7 @@ public class ComputerPlayer20057028 extends IPlayer {
 
 
     private int getRow(int c) {
-        for (int i = gameBoard.getNoRows() - 1; i >=0; i++) {
+        for (int i = gameBoard.getNoRows() - 1; i >=0; i--) {
             if (gameBoard.getLocationState(new Location(c, i))== LocationState.EMPTY)
                 return i;
         }
@@ -86,7 +86,7 @@ public class ComputerPlayer20057028 extends IPlayer {
         boardCount++;
         int max = Integer.MIN_VALUE, score = 0;
         if (col != -1) {
-            score = calcScore(passinyellow);
+            score = calcScore(pmin, col, depth, maxDepth);
             if (yellowWinFound) {
                 yellowWin = true;
                 return score;
@@ -118,7 +118,7 @@ public class ComputerPlayer20057028 extends IPlayer {
         boardCount++;
         int min = Integer.MAX_VALUE, score = 0;
         if (col != -1) {
-            score = calcScore(passinred);
+            score = calcScore(pmin, col, depth, maxDepth);
             if (redWinFound) {
                 redWin = true;
                 return score;
@@ -148,7 +148,7 @@ public class ComputerPlayer20057028 extends IPlayer {
 
 
     private boolean isColAvail(int c) {
-        for (int i = gameBoard.getNoRows(); i >= 0; i--) {
+        for (int i = gameBoard.getNoRows() - 1; i >= 0; i--) {
             Location l = new Location(c, i);
             if (gameBoard.getLocationState(l) == LocationState.EMPTY) return true;
         }
@@ -157,7 +157,7 @@ public class ComputerPlayer20057028 extends IPlayer {
     }
 
     private int calcScore(IPlayer player, int col, int depth, int maxDepth) {
-        int score = 0, row = getRow(col) + 1, redCount, yellowCount;
+        int score = 0, row = getRow(col), redCount, yellowCount;
         redWinFound = yellowWinFound= false;
 
         //Check rows
@@ -205,12 +205,12 @@ public class ComputerPlayer20057028 extends IPlayer {
 
         //Diag
 
-        int minValue = Math.min(row, col), rowStart = row - minValue;
+        int minValue = Math.min(col, row), rowStart = row - minValue;
         colStart = col - minValue;
 
         for (int r = rowStart, c = colStart; r <= gameBoard.getNoRows() - 4 && c <= gameBoard.getNoCols() - 4; r++, c++) {
             redCount = yellowCount = 0;
-            for (int val = 0; val <= 4; val++) {
+            for (int val = 0; val < 4; val++) {
                 LocationState state = gameBoard.getLocationState(new Location(c + val, r + val));
                 if (state == LocationState.RED) redCount++;
                 else if (state == LocationState.YELLOW) yellowCount++;
@@ -250,7 +250,22 @@ public class ComputerPlayer20057028 extends IPlayer {
     }
 
     private int getIncrement(int redCount, int yellowCount, IPlayer player) {
-        return 0;  //To change body of created methods use File | Settings | File Templates.
+        LocationState state = player.getPlayerState();
+
+        if (redCount == yellowCount) {
+            if (state == LocationState.RED) {
+                return -1;
+            }
+            return 1;
+        } else if (redCount < yellowCount) {
+            if (state == LocationState.RED) {
+                return INCREMENT[yellowCount] - INCREMENT[redCount];
+            }
+            return INCREMENT[yellowCount + 1] + INCREMENT[redCount];
+        } else {
+            if (state == LocationState.RED) return -INCREMENT[redCount] - INCREMENT[yellowCount];
+            return -INCREMENT[redCount] + INCREMENT[yellowCount];
+        }
     }
 
     private LocationState[] getBoardRow(Board gameBoard, int row) {
