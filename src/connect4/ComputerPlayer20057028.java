@@ -16,7 +16,7 @@ public class ComputerPlayer20057028 extends IPlayer {
     private int[] firstRow;
     private int boardCount, count, col, maxDepth;
     private final int DEPTH = 4; //Set higher to allow for deeper scans and harder AI
-	private boolean yellowWin, redWin;
+	private boolean yellowWin, redWin, yellowWinFound, redWinFound;
 
 
 	public ComputerPlayer20057028(LocationState playerState) {
@@ -41,7 +41,7 @@ public class ComputerPlayer20057028 extends IPlayer {
 
 
 
-        return 0;
+        return minimax(this.pmax);
 	}
 
     private void createGame() {
@@ -49,19 +49,12 @@ public class ComputerPlayer20057028 extends IPlayer {
         LocationState ls = (pmax.getPlayerState() == LocationState.RED) ? LocationState.YELLOW : LocationState.RED;
         pmin = new ComputerPlayer20057028(ls);
         this.c4 = new Connect4(pmax, pmin, gameBoard);
-
     }
 
-    public int getScore() {
-        int score = 0,
-        row = getRow();
 
-        return minimax(this.pmax);
-    }
-
-    private int getRow() {
+    private int getRow(int c) {
         for (int i = gameBoard.getNoRows() - 1; i >=0; i++) {
-            if (gameBoard.getLocationState(new Location(col, i))== LocationState.EMPTY)
+            if (gameBoard.getLocationState(new Location(c, i))== LocationState.EMPTY)
                 return i;
         }
         return -1;
@@ -89,17 +82,13 @@ public class ComputerPlayer20057028 extends IPlayer {
         return col;
     }
 
-    private int scoreYellow(int i, int i1, int i2, int i3, int i4) {
-
-    }
-
     private int scoreRed(int depth, int maxDepth, int col, int alpha, int beta) {
         boardCount++;
         int max = Integer.MIN_VALUE, score = 0;
         if (col != -1) {
-            score = calcScore();
-            if (c4.isWin(gameBoard)) {
-                redWin = true;
+            score = calcScore(passinyellow);
+            if (yellowWinFound) {
+                yellowWin = true;
                 return score;
             }
         }
@@ -108,9 +97,10 @@ public class ComputerPlayer20057028 extends IPlayer {
 
         for (int i = 0; i < gameBoard.getNoCols(); i++) {
             if (isColAvail(i)) {
-                gameBoard.setLocationState(new Location(col, i), pmax.getPlayerState());
+                int r = getRow(i);
+                gameBoard.setLocationState(new Location(i, r), pmax.getPlayerState());
                 int value = scoreYellow(depth + 1, maxDepth, i, alpha, beta);
-                gameBoard.setLocationState(new Location(col, i), LocationState.EMPTY);
+                gameBoard.setLocationState(new Location(i, r), LocationState.EMPTY);
                 if (value > max) {
                     max = value;
                     if (depth == 0) col = i;
@@ -124,13 +114,94 @@ public class ComputerPlayer20057028 extends IPlayer {
         return max;
     }
 
-    public boolean isColAvail(int c) {
+    private int scoreYellow(int depth, int maxDepth, int col, int alpha, int beta) {
+        boardCount++;
+        int min = Integer.MAX_VALUE, score = 0;
+        if (col != -1) {
+            score = calcScore(passinred);
+            if (redWinFound) {
+                redWin = true;
+                return score;
+            }
+        }
+
+        if (depth == maxDepth) return score;
+
+        for (int i = 0; i < gameBoard.getNoCols(); i++) {
+            if (isColAvail(i)) {
+                int r = getRow(i);
+                gameBoard.setLocationState(new Location(i, r), pmin.getPlayerState());
+                int value = scoreRed(depth + 1, maxDepth, i, alpha, beta);
+                gameBoard.setLocationState(new Location(i, r), LocationState.EMPTY);
+                if (value < min) {
+                    min = value;
+                    if (depth == 0) col = i;
+                }
+                if (value < beta) beta = value;
+                if (alpha >= beta) return beta;
+            }
+        }
+        if (min == Integer.MAX_VALUE) return 0;
+
+        return min;
+    }
+
+
+    private boolean isColAvail(int c) {
         for (int i = gameBoard.getNoRows(); i >= 0; i--) {
             Location l = new Location(c, i);
             if (gameBoard.getLocationState(l) == LocationState.EMPTY) return true;
         }
 
         return false;
+    }
+
+    private int calcScore(IPlayer player, int col, int depth, int maxDepth) {
+        int score, row = getRow(col) + 1, redCount, yellowCount;
+        redWinFound = yellowWinFound= false;
+
+        //Check rows
+        redCount = yellowCount = 0;
+        LocationState[] boardRow = getBoardRow(gameBoard, row);
+
+        int cStart = col - 3, colStart = cStart >= 0 ? cStart : 0,
+                colEnd = gameBoard.getNoCols() - 3 - (colStart - cStart);
+
+        for (int i = colStart; i < colEnd; i++) {
+            redCount = yellowCount = 0;
+            for (int val = 0; val < 4; val++) {
+                LocationState state = boardRow[i + val];
+                if (state == LocationState.YELLOW) yellowCount++;
+                else if (state == LocationState.RED) redCount++;
+            }
+            if (redCount == 4) {
+                redWinFound = true;
+                if (depth <= 2) return Integer.MIN_VALUE + 1;
+            } else if (yellowCount == 4) {
+                yellowWinFound = true;
+                if (depth <= 2) return Integer.MAX_VALUE - 1;
+            }
+        }
+        score += getIncrement(redCount, yellowCount, player);
+
+
+
+
+
+        return score;
+    }
+
+    private int getIncrement(int redCount, int yellowCount, IPlayer player) {
+        return 0;  //To change body of created methods use File | Settings | File Templates.
+    }
+
+    private LocationState[] getBoardRow(Board gameBoard, int row) {
+        LocationState[] r = new LocationState[gameBoard.getNoCols()];
+        for (int i = 0; i < gameBoard.getNoCols(); i++) {
+            LocationState l = gameBoard.getLocationState(new Location(i, row));
+            r[i] = l;
+        }
+        return r;
     }
 
 }
