@@ -38,9 +38,6 @@ public class ComputerPlayer20057028 extends IPlayer {
 	public int getMove(Board board) {
         this.gameBoard = copyBoard(board);
         createGame();
-
-
-
         return minimax(this.pmax);
 	}
 
@@ -158,7 +155,7 @@ public class ComputerPlayer20057028 extends IPlayer {
 
     private int calcScore(IPlayer player, int col, int depth, int maxDepth) {
         int score = 0, row = getRow(col), redCount, yellowCount;
-        redWinFound = yellowWinFound= false;
+        redWinFound = yellowWinFound = false;
 
         //Check rows
         redCount = yellowCount = 0;
