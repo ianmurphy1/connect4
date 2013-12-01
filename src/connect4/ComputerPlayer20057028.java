@@ -13,7 +13,7 @@ public class ComputerPlayer20057028 extends IPlayer {
     private IPlayer pmax, pmin;
     private Connect4 c4;
     private Board gameBoard;
-    private int[] firstRow;
+    public static final int[] INCREMENT = {0, 1, 4, 32, 128, 512};
     private int boardCount, count, col, maxDepth;
     private final int DEPTH = 4; //Set higher to allow for deeper scans and harder AI
 	private boolean yellowWin, redWin, yellowWinFound, redWinFound;
@@ -157,7 +157,7 @@ public class ComputerPlayer20057028 extends IPlayer {
     }
 
     private int calcScore(IPlayer player, int col, int depth, int maxDepth) {
-        int score, row = getRow(col) + 1, redCount, yellowCount;
+        int score = 0, row = getRow(col) + 1, redCount, yellowCount;
         redWinFound = yellowWinFound= false;
 
         //Check rows
@@ -184,10 +184,68 @@ public class ComputerPlayer20057028 extends IPlayer {
         }
         score += getIncrement(redCount, yellowCount, player);
 
+        //Columns
 
+        redCount = yellowCount = 0;
+        int rowEnd = Math.min(gameBoard.getNoRows(), row + 4);
+        for (int r = row; r < rowEnd; r++) {
+            LocationState state = gameBoard.getLocationState(new Location(col, r));
+            if (state == LocationState.RED) redCount++;
+            else if (state == LocationState.YELLOW) yellowCount++;
+        }
 
+        if (redCount == 4) {
+            redWinFound = true;
+            if (depth <= 2) return Integer.MIN_VALUE + 1;
+        } else if (yellowCount == 4) {
+            yellowWinFound = true;
+            if (depth <= 2) return Integer.MAX_VALUE - 1;
+        }
+        score += getIncrement(redCount, yellowCount, player);
 
+        //Diag
 
+        int minValue = Math.min(row, col), rowStart = row - minValue;
+        colStart = col - minValue;
+
+        for (int r = rowStart, c = colStart; r <= gameBoard.getNoRows() - 4 && c <= gameBoard.getNoCols() - 4; r++, c++) {
+            redCount = yellowCount = 0;
+            for (int val = 0; val <= 4; val++) {
+                LocationState state = gameBoard.getLocationState(new Location(c + val, r + val));
+                if (state == LocationState.RED) redCount++;
+                else if (state == LocationState.YELLOW) yellowCount++;
+            }
+            if (redCount == 4) {
+                redWinFound = true;
+                if (depth <= 2) return Integer.MIN_VALUE + 1;
+            } else if (yellowCount == 4) {
+                yellowWinFound = true;
+                if (depth <= 2) return Integer.MAX_VALUE - 1;
+            }
+            score += getIncrement(redCount, yellowCount, player);
+        }
+
+        //Diag
+        minValue = Math.min(gameBoard.getNoRows() - 1 - row, col);
+        rowStart = row + minValue;
+        colStart = col - minValue;
+
+        for (int c = colStart, r = rowStart; c <= gameBoard.getNoCols() - 4 && r >= 3; c++, r--) {
+            redCount = yellowCount = 0;
+            for (int val = 0; val < 4; val++) {
+                LocationState state = gameBoard.getLocationState(new Location(c + val, r - val));
+                if (state == LocationState.RED) redCount++;
+                else if (state == LocationState.YELLOW) yellowCount++;
+            }
+            if (redCount == 4) {
+                redWinFound = true;
+                if (depth <= 2) return Integer.MIN_VALUE + 1;
+            } else if (yellowCount == 4) {
+                yellowWinFound = true;
+                if (depth <= 2) return Integer.MAX_VALUE - 1;
+            }
+            score += getIncrement(redCount, yellowCount, player);
+        }
         return score;
     }
 
