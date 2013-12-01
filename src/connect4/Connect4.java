@@ -24,7 +24,6 @@ public class Connect4 {
 	 * Toggles current player 
 	 */
 	public void nextPlayer() {
-
 		if (currentPlayer == human) 
 			currentPlayer = computer;
 		else 

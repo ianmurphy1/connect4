@@ -1,6 +1,5 @@
 package connect4;
 
-
 import edu.princeton.cs.introcs.StdIn;
 import edu.princeton.cs.introcs.StdOut;
 
