@@ -10,17 +10,18 @@ package connect4;
  */
 public class ComputerPlayer20057028 extends IPlayer {
 
-    private IPlayer max, min;
+    private IPlayer pmax, pmin;
     private Connect4 c4;
     private Board gameBoard;
     private int[] firstRow;
-    private int numTurns, count, col, maxDepth;
+    private int boardCount, count, col, maxDepth;
     private final int DEPTH = 4; //Set higher to allow for deeper scans and harder AI
 	private boolean yellowWin, redWin;
 
 
 	public ComputerPlayer20057028(LocationState playerState) {
 		super(playerState);
+        this.boardCount = 0;
 	}
 
     private Board copyBoard(Board board) {
@@ -44,17 +45,18 @@ public class ComputerPlayer20057028 extends IPlayer {
 	}
 
     private void createGame() {
-        max = new ComputerPlayer20057028(this.getPlayerState());
-        LocationState ls = (max.getPlayerState() == LocationState.RED) ? LocationState.YELLOW : LocationState.RED;
-        min = new ComputerPlayer20057028(ls);
-        this.c4 = new Connect4(max, min, gameBoard);
+        pmax = new ComputerPlayer20057028(this.getPlayerState());
+        LocationState ls = (pmax.getPlayerState() == LocationState.RED) ? LocationState.YELLOW : LocationState.RED;
+        pmin = new ComputerPlayer20057028(ls);
+        this.c4 = new Connect4(pmax, pmin, gameBoard);
+
     }
 
     public int getScore() {
         int score = 0,
         row = getRow();
 
-        return minimax(this.max);
+        return minimax(this.pmax);
     }
 
     private int getRow() {
@@ -87,5 +89,48 @@ public class ComputerPlayer20057028 extends IPlayer {
         return col;
     }
 
+    private int scoreYellow(int i, int i1, int i2, int i3, int i4) {
+
+    }
+
+    private int scoreRed(int depth, int maxDepth, int col, int alpha, int beta) {
+        boardCount++;
+        int max = Integer.MIN_VALUE, score = 0;
+        if (col != -1) {
+            score = calcScore();
+            if (c4.isWin(gameBoard)) {
+                redWin = true;
+                return score;
+            }
+        }
+
+        if (depth == maxDepth) return score;
+
+        for (int i = 0; i < gameBoard.getNoCols(); i++) {
+            if (isColAvail(i)) {
+                gameBoard.setLocationState(new Location(col, i), pmax.getPlayerState());
+                int value = scoreYellow(depth + 1, maxDepth, i, alpha, beta);
+                gameBoard.setLocationState(new Location(col, i), LocationState.EMPTY);
+                if (value > max) {
+                    max = value;
+                    if (depth == 0) col = i;
+                }
+                if (value > alpha) alpha = value;
+                if (alpha >= beta) return alpha;
+            }
+        }
+        if (max == Integer.MIN_VALUE) return 0;
+
+        return max;
+    }
+
+    public boolean isColAvail(int c) {
+        for (int i = gameBoard.getNoRows(); i >= 0; i--) {
+            Location l = new Location(c, i);
+            if (gameBoard.getLocationState(l) == LocationState.EMPTY) return true;
+        }
+
+        return false;
+    }
 
 }
