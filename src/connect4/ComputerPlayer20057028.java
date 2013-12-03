@@ -48,7 +48,7 @@ public class ComputerPlayer20057028 extends IPlayer {
     private int negamax(Board b, int depth, int alpha, int beta, IPlayer player) {
         if (c4.isWin(b) || isDraw(b) || depth == 0) {
             int i = (player.getPlayerState() == pmax.getPlayerState()) ? 0 : 1;
-            return sign[i] * eval(b);
+            return sign[i] * eval(b, player);
         }
 
         IPlayer opp;
@@ -107,6 +107,8 @@ public class ComputerPlayer20057028 extends IPlayer {
         int score = 0;
         //Multipliers based on whether possible rows are vertical, horizontal or diagonal
         int v = 1, d = 2, h = 3;
+        //Scores for tokens in a row
+        int twoInRow = 10, threeInRow = 1000;
         //Check win horizontally
         for (int i = 0; i < b.getNoCols() - 4; i++) {
             for (int j = 0; j < b.getNoRows(); j++) {
@@ -143,9 +145,6 @@ public class ComputerPlayer20057028 extends IPlayer {
                 }
             }
         }
-
-        int twoInRow = 10;
-        int threeInRow = 1000;
 
         //Horizontal
         for (int i = 0; i < 4; i++) {
