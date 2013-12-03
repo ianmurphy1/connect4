@@ -1,6 +1,7 @@
 package connect4;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 
 /**
  * 
@@ -61,7 +62,10 @@ public class ComputerPlayer20057028 extends IPlayer {
             Board c = copyBoard(b);
             c.setLocationState(new Location(moves[i], getRow(i, c)), player.getPlayerState());
             int x = - negamax(c, depth - 1, -alpha, -beta, opp);
-            if (x > max) max = x;
+            if (x > max) {
+                max = x;
+                bestColumn = i;
+            }
             if (x > alpha) alpha = x;
             if (alpha >= beta) return alpha;
         }
@@ -87,8 +91,9 @@ public class ComputerPlayer20057028 extends IPlayer {
 
     private int[] convertArray(ArrayList<Integer> m) {
         int[] arr = new int[m.size()];
+        Iterator<Integer> it = m.iterator();
         for (int i = 0; i < arr.length; i++) {
-            arr[i] = m.get(i).intValue();
+            arr[i] = it.next().intValue();
         }
         return arr;  //To change body of created methods use File | Settings | File Templates.
     }
