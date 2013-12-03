@@ -15,6 +15,7 @@ public class ComputerPlayer20057028 extends IPlayer {
     private IPlayer pmax, pmin;
     private Connect4 c4;
     private Board gameBoard;
+    int[] sign = new int[] {1, -1};
     private int[] moves;
     private int bestColumn;
     private final int DEPTH = 4; //Set higher to allow for deeper scans and harder AI
@@ -43,7 +44,11 @@ public class ComputerPlayer20057028 extends IPlayer {
 	}
 
     private int negamax(Board b, int depth, int alpha, int beta, IPlayer player) {
-        if (c4.isWin(b) || c4.isDraw() || depth == 0) return eval(b);
+        if (c4.isWin(b) || c4.isDraw() || depth == 0) {
+            int i;
+            i = (player.getPlayerState() == pmax.getPlayerState()) ? 0 : 1;
+            return sign[i] * eval(b);
+        }
 
         IPlayer opp;
         LocationState ls = (player.getPlayerState() == LocationState.RED) ? LocationState.YELLOW : LocationState.RED;
@@ -63,8 +68,13 @@ public class ComputerPlayer20057028 extends IPlayer {
         return max;
     }
 
-    private int getRow(int i, Board b) {
-        return 0;  //To change body of created methods use File | Settings | File Templates.
+    private int getRow(int col, Board b) {
+        int row;
+
+        for (int i = b.getNoRows() - 1; i >=0; i--)
+            if (b.getLocationState(new Location(col, i)) == LocationState.EMPTY) return i;
+
+        return 0;
     }
 
     private int[] getLegalMoves(Board b) {
