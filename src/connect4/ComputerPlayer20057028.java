@@ -46,6 +46,7 @@ public class ComputerPlayer20057028 extends IPlayer {
             Location move = new Location(lmoves[i], getRow(lmoves[i], gameBoard));
             gameBoard.setLocationState(move, pmax.getPlayerState());
             negamax(gameBoard, move, DEPTH, Integer.MIN_VALUE, Integer.MAX_VALUE, pmax);
+            gameBoard.setLocationState(move, LocationState.EMPTY);
         }
         return bestColumn;
 	}
@@ -53,7 +54,7 @@ public class ComputerPlayer20057028 extends IPlayer {
     private int negamax(Board b, Location m, int depth, int alpha, int beta, IPlayer player) {
         if (c4.isWin(b) || isDraw(b) || depth == 0) {
             int i = (player.getPlayerState() == pmax.getPlayerState()) ? 0 : 1;
-            return sign[i] * eval(b, player);
+            return sign[i] * eval(b, m, player);
         }
 
         IPlayer opp;
@@ -71,7 +72,7 @@ public class ComputerPlayer20057028 extends IPlayer {
                 max = x;
                 bestColumn = i;
             }
-            b.setLocationState(new Location(moves[i], getRow(moves[i], b)), LocationState.EMPTY);
+            b.setLocationState(mo, LocationState.EMPTY);
             if (x > alpha) alpha = x;
             if (alpha >= beta) return alpha;
         }
@@ -108,7 +109,8 @@ public class ComputerPlayer20057028 extends IPlayer {
         return arr;  //To change body of created methods use File | Settings | File Templates.
     }
 
-    private int eval(Board b, IPlayer p) {
+    private int eval(Board b, Location l, IPlayer p) {
+        b.setLocationState(l, p.getPlayerState());
         int score = 0;
         //Multipliers based on whether possible rows are vertical, horizontal or diagonal
         int v = 1, d = 2, h = 3;
