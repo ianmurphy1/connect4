@@ -107,7 +107,7 @@ public class ComputerPlayer20057028 extends IPlayer {
         for (int i = 0; i < arr.length; i++) {
             arr[i] = it.next().intValue();
         }
-        return arr;  //To change body of created methods use File | Settings | File Templates.
+        return arr;
     }
 
     private int eval(Board b, IPlayer p) {
@@ -150,9 +150,26 @@ public class ComputerPlayer20057028 extends IPlayer {
                 }
             }
         }
+        //Check diagonally back
+        for (int i = 0; i < b.getNoCols() - 3; i++) {
+            for (int j = b.getNoRows() - 4; j >= 0; j--) {
+                if (b.getLocationState(new Location(i, j)) == p.getPlayerState()
+                        && b.getLocationState(new Location(i + 1, j + 1)) == p.getPlayerState()
+                        && b.getLocationState(new Location(i + 2, j + 2)) == p.getPlayerState()
+                        && b.getLocationState(new Location(i + 3, j + 3)) == p.getPlayerState())
+                    return Integer.MAX_VALUE;
+            }
+        }
 
-        //Horizontal
-        for (int i = 0; i < 4; i++) {
+
+        /******************************************************************************
+         *                                                                            *
+         *                        2 IN A ROW CHECKS                                   *
+         *                                                                            *
+         ******************************************************************************/
+
+        //Horizontal 2 in a row
+        for (int i = 0; i < b.getNoCols() - 4; i++) {
             for (int j = 0; j < 6; j++) {
                 //checking (xx00)
                 if (b.getLocationState(new Location(i, j)) == p.getPlayerState()
@@ -192,6 +209,141 @@ public class ComputerPlayer20057028 extends IPlayer {
                     score += twoInRow * h;
             }
         }
+
+        //Vertical 2 in a row
+        // 0
+        // x
+        // x
+        // Only way it can occur
+        for (int i = 0; i < b.getNoCols(); i++) {
+            for (int j = b.getNoRows() - 1; j >= 2; j--) {
+                if (b.getLocationState(new Location(i, j)) == p.getPlayerState()
+                        && b.getLocationState(new Location(i, j + 1)) == p.getPlayerState()
+                        && b.getLocationState(new Location(i, j + 2)) == LocationState.EMPTY)
+                    score += twoInRow * v;
+            }
+        }
+
+        //Check for forward diagonal 2 in a rows
+        for (int i =  b.getNoCols() - 1; i >= 3; i--) {
+            for (int j = b.getNoRows() - 4; j >= 0; j--) {
+                //    x
+                //   x
+                //  0
+                // 0
+                if (b.getLocationState(new Location(i, j)) == p.getPlayerState()
+                        && b.getLocationState(new Location(i - 1, j + 1)) == p.getPlayerState()
+                        && b.getLocationState(new Location(i - 2, j + 2)) == LocationState.EMPTY
+                        && b.getLocationState(new Location(i - 3, j + 3)) == LocationState.EMPTY)
+                    score += twoInRow * d;
+                //    x
+                //   0
+                //  0
+                // x
+                else if (b.getLocationState(new Location(i, j)) == p.getPlayerState()
+                        && b.getLocationState(new Location(i - 3, j + 3)) == p.getPlayerState()
+                        && b.getLocationState(new Location(i - 1, j + 1)) == LocationState.EMPTY
+                        && b.getLocationState(new Location(i - 2, j + 2)) == LocationState.EMPTY)
+                    score += twoInRow * d;
+                //    0
+                //   x
+                //  x
+                // 0
+                else if (b.getLocationState(new Location(i, j)) == LocationState.EMPTY
+                        && b.getLocationState(new Location(i - 3, j + 3)) == LocationState.EMPTY
+                        && b.getLocationState(new Location(i - 1, j + 1)) == p.getPlayerState()
+                        && b.getLocationState(new Location(i - 2, j + 2)) == p.getPlayerState())
+                    score += twoInRow * d;
+                //    0
+                //   x
+                //  0
+                // x
+                else if (b.getLocationState(new Location(i, j)) == LocationState.EMPTY
+                        && b.getLocationState(new Location(i - 2, j + 2)) == LocationState.EMPTY
+                        && b.getLocationState(new Location(i - 1, j + 1)) == p.getPlayerState()
+                        && b.getLocationState(new Location(i - 3, j + 3)) == p.getPlayerState())
+                    score += twoInRow * d;
+                //    0
+                //   0
+                //  x
+                // x
+                else if (b.getLocationState(new Location(i, j)) == LocationState.EMPTY
+                        && b.getLocationState(new Location(i - 1, j + 1)) == LocationState.EMPTY
+                        && b.getLocationState(new Location(i - 2, j + 2)) == p.getPlayerState()
+                        && b.getLocationState(new Location(i - 3, j + 3)) == p.getPlayerState())
+                    score += twoInRow * d;
+                //    x
+                //   0
+                //  x
+                // 0
+                else if (b.getLocationState(new Location(i, j)) == p.getPlayerState()
+                        && b.getLocationState(new Location(i - 2, j + 2)) == p.getPlayerState()
+                        && b.getLocationState(new Location(i - 1, j + 1)) == LocationState.EMPTY
+                        && b.getLocationState(new Location(i - 3, j + 3)) == LocationState.EMPTY)
+                    score += twoInRow * d;
+            }
+        }
+
+        //Check for backward diagonal 2 in a rows
+        for (int i = 0; i < b.getNoCols() - 3; i++) {
+            for (int j = b.getNoRows() - 4; j >= 0; j--) {
+                // x
+                //  x
+                //   0
+                //    0
+                if (b.getLocationState(new Location(i, j)) == p.getPlayerState()
+                        && b.getLocationState(new Location(i + 1, j + 1)) == p.getPlayerState()
+                        && b.getLocationState(new Location(i + 2, j + 2)) == LocationState.EMPTY
+                        && b.getLocationState(new Location(i + 3, j + 3)) == LocationState.EMPTY)
+                    score += twoInRow * d;
+                // x
+                //  0
+                //   0
+                //    x
+                else if (b.getLocationState(new Location(i, j)) == p.getPlayerState()
+                        && b.getLocationState(new Location(i + 3, j + 3)) == p.getPlayerState()
+                        && b.getLocationState(new Location(i + 1, j + 1)) == LocationState.EMPTY
+                        && b.getLocationState(new Location(i + 2, j + 2)) == LocationState.EMPTY)
+                    score += twoInRow * d;
+                // 0
+                //  x
+                //   x
+                //    0
+                else if (b.getLocationState(new Location(i, j)) == LocationState.EMPTY
+                        && b.getLocationState(new Location(i + 3, j + 3)) == LocationState.EMPTY
+                        && b.getLocationState(new Location(i + 1, j + 1)) == p.getPlayerState()
+                        && b.getLocationState(new Location(i + 2, j + 2)) == p.getPlayerState())
+                    score += twoInRow * d;
+                // 0
+                //  x
+                //   0
+                //    x
+                else if (b.getLocationState(new Location(i, j)) == LocationState.EMPTY
+                        && b.getLocationState(new Location(i + 2, j + 2)) == LocationState.EMPTY
+                        && b.getLocationState(new Location(i + 1, j + 1)) == p.getPlayerState()
+                        && b.getLocationState(new Location(i + 3, j + 3)) == p.getPlayerState())
+                    score += twoInRow * d;
+                // 0
+                //  0
+                //   x
+                //    x
+                else if (b.getLocationState(new Location(i, j)) == LocationState.EMPTY
+                        && b.getLocationState(new Location(i + 1, j + 1)) == LocationState.EMPTY
+                        && b.getLocationState(new Location(i + 2, j + 2)) == p.getPlayerState()
+                        && b.getLocationState(new Location(i + 3, j + 3)) == p.getPlayerState())
+                    score += twoInRow * d;
+                // x
+                //  0
+                //   x
+                //    0
+                else if (b.getLocationState(new Location(i, j)) == p.getPlayerState()
+                        && b.getLocationState(new Location(i + 2, j + 2)) == p.getPlayerState()
+                        && b.getLocationState(new Location(i + 1, j + 1)) == LocationState.EMPTY
+                        && b.getLocationState(new Location(i + 3, j + 3)) == LocationState.EMPTY)
+                    score += twoInRow * d;
+            }
+        }
+
 
         return score * DIFFICULTY;
     }
