@@ -161,7 +161,6 @@ public class ComputerPlayer20057028 extends IPlayer {
             }
         }
 
-
         /******************************************************************************
          *                                                                            *
          *                        2 IN A ROW CHECKS                                   *
@@ -344,6 +343,140 @@ public class ComputerPlayer20057028 extends IPlayer {
             }
         }
 
+        /******************************************************************************
+         *                                                                            *
+         *                        3 IN A ROW CHECKS                                   *
+         *                                                                            *
+         ******************************************************************************/
+
+        //Horizontal checking of 3 in a row
+        for (int i = 0; i < b.getNoCols() - 4; i++) {
+            for (int j = 0; j < b.getNoRows(); j++) {
+                // (xxx0)
+                if (b.getLocationState(new Location(i, j)) == p.getPlayerState()
+                        && b.getLocationState(new Location(i + 1, j)) == p.getPlayerState()
+                        && b.getLocationState(new Location(i + 2, j)) == p.getPlayerState()
+                        && b.getLocationState(new Location(i + 3, j)) == LocationState.EMPTY)
+                    score += threeInRow * h;
+                // (xx0x)
+                else if (b.getLocationState(new Location(i, j))== p.getPlayerState()
+                        && b.getLocationState(new Location(i + 1, j)) == p.getPlayerState()
+                        && b.getLocationState(new Location(i + 3, j)) == p.getPlayerState()
+                        && b.getLocationState(new Location(i + 2, j)) == p.getPlayerState())
+                    score += threeInRow * h;
+                // (x0xx)
+                else if (b.getLocationState(new Location(i, j))== p.getPlayerState()
+                        && b.getLocationState(new Location(i + 2, j)) == p.getPlayerState()
+                        && b.getLocationState(new Location(i + 3, j)) == p.getPlayerState()
+                        && b.getLocationState(new Location(i + 1, j)) == LocationState.EMPTY)
+                    score += threeInRow * h;
+                else if (b.getLocationState(new Location(i, j))== LocationState.EMPTY
+                        && b.getLocationState(new Location(i + 1, j)) == p.getPlayerState()
+                        && b.getLocationState(new Location(i + 2, j)) == p.getPlayerState()
+                        && b.getLocationState(new Location(i + 3, j)) == p.getPlayerState())
+                    score += threeInRow * h;
+            }
+        }
+
+        //Vertical checking of 3 in a row
+        // 0
+        // x
+        // x
+        // x
+        // Only way it can occur
+        for (int i = 0; i < b.getNoCols(); i++) {
+            for (int j = b.getNoRows() - 1; j >= 3; j--) {
+                if (b.getLocationState(new Location(i, j)) == p.getPlayerState()
+                        && b.getLocationState(new Location(i, j + 1)) == p.getPlayerState()
+                        && b.getLocationState(new Location(i, j + 2)) == p.getPlayerState()
+                        && b.getLocationState(new Location(i, j + 3)) == LocationState.EMPTY)
+                    score += threeInRow * v;
+            }
+        }
+
+        //3 in a row checking forward diagonal
+        for (int i =  b.getNoCols() - 1; i >= 3; i--) {
+            for (int j = b.getNoRows() - 4; j >= 0; j--) {
+                //    x
+                //   x
+                //  x
+                // 0
+                if (b.getLocationState(new Location(i, j)) == p.getPlayerState()
+                        && b.getLocationState(new Location(i - 1, j + 1)) == p.getPlayerState()
+                        && b.getLocationState(new Location(i - 2, j + 2)) == p.getPlayerState()
+                        && b.getLocationState(new Location(i - 3, j + 3)) == LocationState.EMPTY)
+                    score += threeInRow * d;
+                //    x
+                //   x
+                //  0
+                // x
+                else if (b.getLocationState(new Location(i, j)) == p.getPlayerState()
+                        && b.getLocationState(new Location(i - 1, j + 1)) == p.getPlayerState()
+                        && b.getLocationState(new Location(i - 3, j + 3)) == p.getPlayerState()
+                        && b.getLocationState(new Location(i - 2, j + 2)) == LocationState.EMPTY)
+                    score += threeInRow * d;
+                //    0
+                //   x
+                //  x
+                // x
+                else if (b.getLocationState(new Location(i, j)) == LocationState.EMPTY
+                        && b.getLocationState(new Location(i - 1, j + 1)) == p.getPlayerState()
+                        && b.getLocationState(new Location(i - 2, j + 2)) == p.getPlayerState()
+                        && b.getLocationState(new Location(i - 3, j + 3)) == p.getPlayerState())
+                    score += threeInRow * d;
+                //    x
+                //   0
+                //  x
+                // x
+                else if (b.getLocationState(new Location(i, j)) == p.getPlayerState()
+                        && b.getLocationState(new Location(i - 2, j + 2)) == p.getPlayerState()
+                        && b.getLocationState(new Location(i - 3, j + 3)) == p.getPlayerState()
+                        && b.getLocationState(new Location(i - 1, j + 1)) == LocationState.EMPTY)
+                    score += threeInRow * d;
+            }
+        }
+
+        //Check for backward diagonal 3 in a rows
+        for (int i = 0; i < b.getNoCols() - 3; i++) {
+            for (int j = b.getNoRows() - 4; j >= 0; j--) {
+                // x
+                //  x
+                //   x
+                //    0
+                if (b.getLocationState(new Location(i, j)) == p.getPlayerState()
+                        && b.getLocationState(new Location(i + 1, j + 1)) == p.getPlayerState()
+                        && b.getLocationState(new Location(i + 2, j + 2)) == p.getPlayerState()
+                        && b.getLocationState(new Location(i + 3, j + 3)) == LocationState.EMPTY)
+                    score += threeInRow * d;
+                // x
+                //  x
+                //   0
+                //    x
+                else if (b.getLocationState(new Location(i, j)) == p.getPlayerState()
+                        && b.getLocationState(new Location(i + 1, j + 1)) == p.getPlayerState()
+                        && b.getLocationState(new Location(i + 3, j + 3)) == p.getPlayerState()
+                        && b.getLocationState(new Location(i + 2, j + 2)) == LocationState.EMPTY)
+                    score += threeInRow * d;
+                // 0
+                //  x
+                //   x
+                //    x
+                else if (b.getLocationState(new Location(i, j)) == LocationState.EMPTY
+                        && b.getLocationState(new Location(i + 1, j + 1)) == p.getPlayerState()
+                        && b.getLocationState(new Location(i + 2, j + 2)) == p.getPlayerState()
+                        && b.getLocationState(new Location(i + 3, j + 3)) == p.getPlayerState())
+                    score += threeInRow * d;
+                // x
+                //  0
+                //   x
+                //    x
+                else if (b.getLocationState(new Location(i, j)) == p.getPlayerState()
+                        && b.getLocationState(new Location(i + 2, j + 2)) == p.getPlayerState()
+                        && b.getLocationState(new Location(i + 3, j + 3)) == p.getPlayerState()
+                        && b.getLocationState(new Location(i + 1, j + 1)) == LocationState.EMPTY)
+                    score += threeInRow * d;
+            }
+        }
 
         return score * DIFFICULTY;
     }
