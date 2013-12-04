@@ -1,5 +1,9 @@
 package connect4;
 
+
+import edu.princeton.cs.introcs.StdOut;
+import edu.princeton.cs.introcs.Stopwatch;
+
 /**
  * 
  * Class to manage the connect 4 game
@@ -36,7 +40,7 @@ public class Connect4 {
 	 * @return boolean to detect winner
 	 */
 	public boolean isWin(Board board) {
-       //if (numTurns < 7) return false;
+       if (numTurns < 7) return false;
 		return checkVertical(board)|| checkHorizontal(board) || checkDiagFor(board) || checkDiagBack(board);
 	}
 
@@ -131,8 +135,37 @@ public class Connect4 {
 	 * @param args
 	 */
 	public static void main(String[] args) {
-		// TODO Auto-generated method stub
-
+        int ai = 0;
+        int random = 0;
+        //Stopwatch s = new Stopwatch();
+        for (int i = 0; i < 1; i++) {
+//            IPlayer player1 = new HumanPlayer(LocationState.YELLOW);
+            IPlayer p1 = new ComputerPlayer20057028(LocationState.YELLOW);
+            IPlayer p2 = new ComputerPlayer20057028_Random(LocationState.RED);
+            Board board = new Board(7, 6);
+            Connect4 c4 = new Connect4(p1, p2, board);
+            StdOut.print("New board Made");
+            while (!c4.isWin(board) && !c4.isDraw()) {
+                StdOut.print("made into first loop");
+                while (!c4.takeTurn() && !c4.isDraw()) {
+                    StdOut.print("taking turn");
+                    c4.takeTurn();
+                }
+                c4.nextPlayer();
+                if (p1 instanceof HumanPlayer || p2 instanceof HumanPlayer) {
+                    System.out.println(c4.getBoard().toString());          //////DRAW BOARD
+                }
+            }
+            c4.nextPlayer();
+            System.out.print("." + ((i % 100 == 0) ? "\n" : ""));
+//            System.out.print("." );
+//            System.out.println(connect4.currentPlayer.getPlayerState());
+//            System.out.println(connect4.currentPlayer.getPlayerState()+"\nred " + newAiWins + " yell " + oldWins);
+            if (c4.currentPlayer.getPlayerState() == LocationState.RED) ai++;
+            if (c4.currentPlayer.getPlayerState() == LocationState.YELLOW) random++;
+        }
+        System.out.println("\nAI " + ai + "\nold " + random);
+       // System.out.println("time: " + s.elapsedTime());
 	}
 
 }
