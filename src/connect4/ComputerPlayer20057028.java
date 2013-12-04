@@ -17,10 +17,9 @@ public class ComputerPlayer20057028 extends IPlayer {
     private Connect4 c4;
     private Board gameBoard;
     int[] sign = new int[] {1, -1};
-    private int[] moves;
     private int bestColumn;
     private final int DEPTH = 4; //Set higher to allow for deeper scans and harder AI
-
+    private final int DIFFICULTY = 4; //Multiplier for scores to increase difficulty
 
 	public ComputerPlayer20057028(LocationState playerState) {
 		super(playerState);
@@ -41,20 +40,22 @@ public class ComputerPlayer20057028 extends IPlayer {
         this.gameBoard = copyBoard(board);
         createGame();
         if (gameBoard.getLocationState(new Location(3, gameBoard.getNoRows() - 1)) == LocationState.EMPTY) return 3;
+
         int[] lmoves = getLegalMoves(gameBoard);
+
         for (int i = 0; i < lmoves.length; i++) {
             Location move = new Location(lmoves[i], getRow(lmoves[i], gameBoard));
             gameBoard.setLocationState(move, pmax.getPlayerState());
-            negamax(gameBoard, move, DEPTH, Integer.MIN_VALUE, Integer.MAX_VALUE, pmax);
+            negamax(gameBoard, DEPTH, Integer.MIN_VALUE, Integer.MAX_VALUE, pmax);
             gameBoard.setLocationState(move, LocationState.EMPTY);
         }
         return bestColumn;
 	}
 
-    private int negamax(Board b, Location m, int depth, int alpha, int beta, IPlayer player) {
+    private int negamax(Board b, int depth, int alpha, int beta, IPlayer player) {
         if (c4.isWin(b) || isDraw(b) || depth == 0) {
             int i = (player.getPlayerState() == pmax.getPlayerState()) ? 0 : 1;
-            return sign[i] * eval(b, m, player);
+            return sign[i] * eval(b, player);
         }
 
         IPlayer opp;
@@ -62,12 +63,12 @@ public class ComputerPlayer20057028 extends IPlayer {
         opp = new ComputerPlayer20057028(ls);
 
         int max = Integer.MIN_VALUE;
-        moves = getLegalMoves(b);
+        int[] moves = getLegalMoves(b);
 
         for (int i = 0; i < moves.length; i++) {
             Location mo = new Location(moves[i], getRow(moves[i], b));
             b.setLocationState(mo, player.getPlayerState());
-            int x = -(negamax(b, mo, depth - 1, -alpha, -beta, opp));
+            int x = -(negamax(b, depth - 1, -alpha, -beta, opp));
             if (x > max) {
                 max = x;
                 bestColumn = i;
@@ -87,9 +88,9 @@ public class ComputerPlayer20057028 extends IPlayer {
     }
 
     private int getRow(int col, Board b) {
-        for (int i = b.getNoRows() - 1; i >=0; i--)
+        for (int i = b.getNoRows() - 1; i >= 0; i--)
             if (b.getLocationState(new Location(col, i)) == LocationState.EMPTY) return i;
-        return 0;
+        return -1;
     }
 
     private int[] getLegalMoves(Board b) {
@@ -109,8 +110,8 @@ public class ComputerPlayer20057028 extends IPlayer {
         return arr;  //To change body of created methods use File | Settings | File Templates.
     }
 
-    private int eval(Board b, Location l, IPlayer p) {
-        b.setLocationState(l, p.getPlayerState());
+    private int eval(Board b, IPlayer p) {
+
         int score = 0;
         //Multipliers based on whether possible rows are vertical, horizontal or diagonal
         int v = 1, d = 2, h = 3;
@@ -192,7 +193,7 @@ public class ComputerPlayer20057028 extends IPlayer {
             }
         }
 
-        return score;
+        return score * DIFFICULTY;
     }
 
     private void createGame() {
