@@ -41,11 +41,16 @@ public class ComputerPlayer20057028 extends IPlayer {
         this.gameBoard = copyBoard(board);
         createGame();
         if (gameBoard.getLocationState(new Location(3, gameBoard.getNoRows() - 1)) == LocationState.EMPTY) return 3;
-        negamax(gameBoard, DEPTH, Integer.MIN_VALUE, Integer.MAX_VALUE, pmax);
+        int[] lmoves = getLegalMoves(gameBoard);
+        for (int i = 0; i < lmoves.length; i++) {
+            Location move = new Location(lmoves[i], getRow(lmoves[i], gameBoard));
+            gameBoard.setLocationState(move, pmax.getPlayerState());
+            negamax(gameBoard, move, DEPTH, Integer.MIN_VALUE, Integer.MAX_VALUE, pmax);
+        }
         return bestColumn;
 	}
 
-    private int negamax(Board b, int depth, int alpha, int beta, IPlayer player) {
+    private int negamax(Board b, Location m, int depth, int alpha, int beta, IPlayer player) {
         if (c4.isWin(b) || isDraw(b) || depth == 0) {
             int i = (player.getPlayerState() == pmax.getPlayerState()) ? 0 : 1;
             return sign[i] * eval(b, player);
@@ -59,14 +64,14 @@ public class ComputerPlayer20057028 extends IPlayer {
         moves = getLegalMoves(b);
 
         for (int i = 0; i < moves.length; i++) {
-            Board c = copyBoard(b);
-            c.setLocationState(new Location(moves[i], getRow(moves[i], c)), player.getPlayerState());
-            int x = -(negamax(c, depth - 1, -alpha, -beta, opp));
+            Location mo = new Location(moves[i], getRow(moves[i], b));
+            b.setLocationState(mo, player.getPlayerState());
+            int x = -(negamax(b, mo, depth - 1, -alpha, -beta, opp));
             if (x > max) {
                 max = x;
                 bestColumn = i;
             }
-            c.setLocationState(new Location(moves[i], getRow(moves[i], c)), LocationState.EMPTY);
+            b.setLocationState(new Location(moves[i], getRow(moves[i], b)), LocationState.EMPTY);
             if (x > alpha) alpha = x;
             if (alpha >= beta) return alpha;
         }
@@ -116,8 +121,7 @@ public class ComputerPlayer20057028 extends IPlayer {
                         && b.getLocationState(new Location(i + 1, j)) == p.getPlayerState()
                         && b.getLocationState(new Location(i + 2, j)) == p.getPlayerState()
                         && b.getLocationState(new Location(i + 3, j)) == p.getPlayerState()) {
-                    if (p.getPlayerState() == pmax.getPlayerState()) return Integer.MAX_VALUE;
-                    else return Integer.MIN_VALUE;
+                    return Integer.MAX_VALUE;
                 }
             }
         }
@@ -128,8 +132,7 @@ public class ComputerPlayer20057028 extends IPlayer {
                         && b.getLocationState(new Location(i, j - 1)) == p.getPlayerState()
                         && b.getLocationState(new Location(i, j - 2)) == p.getPlayerState()
                         && b.getLocationState(new Location(i, j - 3)) == p.getPlayerState()) {
-                    if (p.getPlayerState() == pmax.getPlayerState()) return Integer.MAX_VALUE;
-                    else return Integer.MIN_VALUE;
+                    return Integer.MAX_VALUE;
                 }
             }
         }
@@ -140,8 +143,7 @@ public class ComputerPlayer20057028 extends IPlayer {
                         && b.getLocationState(new Location(i - 1, j + 1)) == p.getPlayerState()
                         && b.getLocationState(new Location(i - 2, j + 2)) == p.getPlayerState()
                         && b.getLocationState(new Location(i - 3, j + 3)) == p.getPlayerState()) {
-                    if (p.getPlayerState() == pmax.getPlayerState()) return Integer.MAX_VALUE;
-                    else return Integer.MIN_VALUE;
+                    return Integer.MAX_VALUE;
                 }
             }
         }
