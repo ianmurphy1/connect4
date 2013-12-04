@@ -14,11 +14,11 @@ import java.util.Iterator;
 public class ComputerPlayer20057028 extends IPlayer {
 
     private IPlayer pmax, pmin;
-    private Connect4 c4;
+    private Connect4 con4;
     private Board gameBoard;
     int[] sign = new int[] {1, -1};
     private int bestColumn;
-    private final int DEPTH = 2; //Set higher to allow for deeper scans and harder AI
+    private final int DEPTH = 5; //Set higher to allow for deeper scans and harder AI
     private final int DIFFICULTY = 4; //Multiplier for scores to increase difficulty
 
 	public ComputerPlayer20057028(LocationState playerState) {
@@ -54,7 +54,7 @@ public class ComputerPlayer20057028 extends IPlayer {
 	}
 
     private int negamax(Board b, int depth, int alpha, int beta, IPlayer player) {
-        if (c4.isWin(b) || isDraw(b) || depth == 0) {
+        if (con4.isWin(b) || isDraw(b) || depth == 0) {
             int i = (player.getPlayerState() == pmax.getPlayerState()) ? 0 : 1;
             return sign[i] * eval(b, player);
         }
@@ -69,7 +69,7 @@ public class ComputerPlayer20057028 extends IPlayer {
         for (int i = 0; i < moves.length; i++) {
             Location mo = new Location(moves[i], getRow(moves[i], b));
             b.setLocationState(mo, player.getPlayerState());
-            int x = -(negamax(b, depth - 1, -alpha, -beta, opp));
+            int x = -(negamax(b, depth - 1, -beta, -alpha, opp));
             if (x > max) {
                 max = x;
                 bestColumn = i;
@@ -483,7 +483,7 @@ public class ComputerPlayer20057028 extends IPlayer {
     private void createGame() {
         pmax = new ComputerPlayer20057028(this.getPlayerState());
         LocationState ls = (pmax.getPlayerState() == LocationState.RED) ? LocationState.YELLOW : LocationState.RED;
-        pmin = new ComputerPlayer20057028(ls);
-        this.c4 = new Connect4(pmax, pmin, gameBoard);
+        pmin = new ComputerPlayer20057028_Random(ls);
+        this.con4 = new Connect4(pmax, pmin, gameBoard);
     }
 }

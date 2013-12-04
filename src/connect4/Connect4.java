@@ -84,8 +84,6 @@ public class Connect4 {
         return false;
     }
 
-
-
     private boolean checkDiagFor(Board board) {
         for (int i =  board.getNoCols() - 1; i >= 3; i--) {
             for (int j = board.getNoRows() - 4; j >= 0; j--) {
@@ -137,20 +135,21 @@ public class Connect4 {
 	public static void main(String[] args) {
         int ai = 0;
         int random = 0;
-        //Stopwatch s = new Stopwatch();
-        for (int i = 0; i < 1; i++) {
+        Stopwatch s = new Stopwatch();
+        for (int i = 0; i < 100; i++) {
 //            IPlayer player1 = new HumanPlayer(LocationState.YELLOW);
             IPlayer p1 = new ComputerPlayer20057028(LocationState.YELLOW);
             IPlayer p2 = new ComputerPlayer20057028_Random(LocationState.RED);
             Board board = new Board(7, 6);
             Connect4 c4 = new Connect4(p1, p2, board);
-            StdOut.print("New board Made");
+            //StdOut.print("New board Made");
             while (!c4.isWin(board) && !c4.isDraw()) {
-                StdOut.print("made into first loop");
-                while (!c4.takeTurn() && !c4.isDraw()) {
-                    StdOut.print("taking turn");
-                    c4.takeTurn();
+               // StdOut.println("made into first loop");
+                while (!c4.isDraw()) {
+                    //StdOut.print(" taking turn ");
+                    if(c4.takeTurn()) break;
                 }
+                //StdOut.println("Turn " + c4.numTurns + " done");
                 c4.nextPlayer();
                 if (p1 instanceof HumanPlayer || p2 instanceof HumanPlayer) {
                     System.out.println(c4.getBoard().toString());          //////DRAW BOARD
@@ -165,7 +164,7 @@ public class Connect4 {
             if (c4.currentPlayer.getPlayerState() == LocationState.YELLOW) random++;
         }
         System.out.println("\nAI " + ai + "\nold " + random);
-       // System.out.println("time: " + s.elapsedTime());
+        System.out.println("time: " + s.elapsedTime());
 	}
 
 }
