@@ -136,20 +136,23 @@ public class Connect4 {
         int ai = 0;
         int random = 0;
         Stopwatch s = new Stopwatch();
-        for (int i = 0; i < 100; i++) {
+        for (int i = 0; i < 1; i++) {
 //            IPlayer player1 = new HumanPlayer(LocationState.YELLOW);
             IPlayer p1 = new ComputerPlayer20057028(LocationState.YELLOW);
-            IPlayer p2 = new ComputerPlayer20057028_Random(LocationState.RED);
+            //IPlayer p2 = new ComputerPlayer20057028_Random(LocationState.RED);
+            //IPlayer p2 = new ComputerPlayer_WinTake_Block(LocationState.RED);
+            IPlayer p2 = new HumanPlayer(LocationState.RED);
             Board board = new Board(7, 6);
             Connect4 c4 = new Connect4(p1, p2, board);
-            //StdOut.print("New board Made");
+            StdOut.println("New board Made");
             while (!c4.isWin(board) && !c4.isDraw()) {
-               // StdOut.println("made into first loop");
+                StdOut.println("made into first loop");
                 while (!c4.isDraw()) {
-                    //StdOut.print(" taking turn ");
+                    StdOut.println(" taking turn ");
                     if(c4.takeTurn()) break;
                 }
                 //StdOut.println("Turn " + c4.numTurns + " done");
+                if (c4.isWin(board)) break;
                 c4.nextPlayer();
                 if (p1 instanceof HumanPlayer || p2 instanceof HumanPlayer) {
                     System.out.println(c4.getBoard().toString());          //////DRAW BOARD
@@ -160,10 +163,12 @@ public class Connect4 {
 //            System.out.print("." );
 //            System.out.println(connect4.currentPlayer.getPlayerState());
 //            System.out.println(connect4.currentPlayer.getPlayerState()+"\nred " + newAiWins + " yell " + oldWins);
+            //System.out.println(c4.getBoard());
             if (c4.currentPlayer.getPlayerState() == LocationState.RED) ai++;
             if (c4.currentPlayer.getPlayerState() == LocationState.YELLOW) random++;
+            System.out.println(c4.getBoard());
         }
-        System.out.println("\nAI " + ai + "\nold " + random);
+        System.out.println("\nAI: " + ai + "\nRandom: " + random);
         System.out.println("time: " + s.elapsedTime());
 	}
 

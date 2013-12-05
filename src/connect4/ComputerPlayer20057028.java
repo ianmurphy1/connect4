@@ -19,7 +19,7 @@ public class ComputerPlayer20057028 extends IPlayer {
     int[] sign = new int[] {1, -1};
     private int bestColumn;
     private final int DEPTH = 5; //Set higher to allow for deeper scans and harder AI
-    private final int DIFFICULTY = 4; //Multiplier for scores to increase difficulty
+    private final int DIFFICULTY = 100; //Multiplier for scores to increase difficulty
 
 	public ComputerPlayer20057028(LocationState playerState) {
 		super(playerState);
@@ -41,43 +41,55 @@ public class ComputerPlayer20057028 extends IPlayer {
         createGame();
         if (gameBoard.getLocationState(new Location(3, gameBoard.getNoRows() - 1)) == LocationState.EMPTY) return 3;
 
-        int[] lmoves = getLegalMoves(gameBoard);
+        ArrayList<Location> moves = getLegalMoves(gameBoard);
+        Location optimalMove = null;
+        int maxScore = Integer.MIN_VALUE;
 
-        for (int i = 0; i < lmoves.length; i++) {
-            Location move = new Location(lmoves[i], getRow(lmoves[i], gameBoard));
+        for (Location move: moves) {
             gameBoard.setLocationState(move, pmax.getPlayerState());
-            negamax(gameBoard, DEPTH, Integer.MIN_VALUE, Integer.MAX_VALUE, pmax);
+            negamax(gameBoard, DEPTH, -Integer.MAX_VALUE, Integer.MAX_VALUE, 1, pmax);
             gameBoard.setLocationState(move, LocationState.EMPTY);
         }
+
+       //for (int i = 0; i < lmoves.length; i++) {
+         //   Location move = new Location(lmoves[i], getRow(lmoves[i], gameBoard));
+         //   gameBoard.setLocationState(move, pmax.getPlayerState());
+          //  negamax(gameBoard, DEPTH, Integer.MIN_VALUE, Integer.MAX_VALUE, pmax);
+        //    gameBoard.setLocationState(move, LocationState.EMPTY);
+      //  }
+
+
         int choice = bestColumn;
         return choice;
 	}
 
-    private int negamax(Board b, int depth, int alpha, int beta, IPlayer player) {
+    private int negamax(Board b, int depth, int alpha, int beta, int sign, IPlayer player) {
         if (con4.isWin(b) || isDraw(b) || depth == 0) {
-            int i = (player.getPlayerState() == pmax.getPlayerState()) ? 0 : 1;
-            return sign[i] * eval(b, player);
+            //int i = (player.getPlayerState() == pmax.getPlayerState()) ? 0 : 1;
+            return sign * eval(b, player);
         }
 
         IPlayer opp;
         LocationState ls = (player.getPlayerState() == LocationState.RED) ? LocationState.YELLOW : LocationState.RED;
-        opp = new ComputerPlayer20057028(ls);
+        opp = (pmax.getPlayerState() == player.getPlayerState()) ? pmin : pmax;
 
-        int max = Integer.MIN_VALUE;
-        int[] moves = getLegalMoves(b);
+        int max = -Integer.MAX_VALUE;
+        ArrayList<Location> moves = getLegalMoves(b);
 
-        for (int i = 0; i < moves.length; i++) {
-            Location mo = new Location(moves[i], getRow(moves[i], b));
-            b.setLocationState(mo, player.getPlayerState());
-            int x = -(negamax(b, depth - 1, -beta, -alpha, opp));
+        for (Location move : moves) {
+            b.setLocationState(move, player.getPlayerState());
+            int x = -negamax(b, depth - 1, -beta, -alpha, -sign, opp);
+            b.setLocationState(move, LocationState.EMPTY);
             if (x > max) {
                 max = x;
-                bestColumn = i;
+                bestColumn = move.getX();
             }
-            b.setLocationState(mo, LocationState.EMPTY);
-            if (x > alpha) alpha = x;
-            if (alpha >= beta) return alpha;
+           // if (x > alpha) alpha = x;
+            //if (alpha >= max) return alpha;
+            alpha = Math.max(alpha, x);
+            if (alpha >= beta) break;
         }
+        System.out.println(max);
         return max;
     }
 
@@ -94,20 +106,22 @@ public class ComputerPlayer20057028 extends IPlayer {
         return -1;
     }
 
-    private int[] getLegalMoves(Board b) {
-        ArrayList<Integer> m = new ArrayList<Integer>();
+    private ArrayList<Location> getLegalMoves(Board b) {
+        ArrayList<Location> list = new ArrayList<Location>();
         for (int i = 0; i < b.getNoCols(); i++) {
-            if (b.getLocationState(new Location(i, 0)) == LocationState.EMPTY) m.add(i);
+            int row = getRow(i, b);
+            if (row >= 0) {
+                Location l = new Location(i, row);
+                list.add(l);
+            }
         }
-
-        int[] arr = new int[m.size()];
-        Iterator<Integer> it = m.iterator();
-        for (int i = 0; i < arr.length; i++) {
-            arr[i] = it.next().intValue();
-        }
-
-        return arr;
+        return list;
     }
+
+
+
+
+
 
     private int eval(Board b, IPlayer p) {
 
@@ -115,7 +129,7 @@ public class ComputerPlayer20057028 extends IPlayer {
         //Multipliers based on whether possible rows are vertical, horizontal or diagonal
         int v = 1, d = 2, h = 3;
         //Scores for tokens in a row
-        int twoInRow = 10, threeInRow = 1000;
+        int oneInRow = 1, twoInRow = 10, threeInRow = 1000;
         //Check win horizontally
         for (int i = 0; i < b.getNoCols() - 4; i++) {
             for (int j = 0; j < b.getNoRows(); j++) {
@@ -159,6 +173,26 @@ public class ComputerPlayer20057028 extends IPlayer {
                     return Integer.MAX_VALUE;
             }
         }
+
+
+        /******************************************************************************
+         *                                                                            *
+         *                        1 IN A ROW CHECKS                                   *
+         *                                                                            *
+         ******************************************************************************/
+
+        //Vertical 1 in a row
+        // 0
+        // x
+        // Only way it can occur
+        for (int i = 0; i < b.getNoCols(); i++) {
+            for (int j = b.getNoRows() - 1; j >= 1; j--) {
+                if (b.getLocationState(new Location(i, j)) == p.getPlayerState()
+                        && b.getLocationState(new Location(i, j - 1)) == LocationState.EMPTY)
+                    score += oneInRow * v;
+            }
+        }
+
 
         /******************************************************************************
          *                                                                            *
@@ -361,7 +395,7 @@ public class ComputerPlayer20057028 extends IPlayer {
                 else if (b.getLocationState(new Location(i, j))== p.getPlayerState()
                         && b.getLocationState(new Location(i + 1, j)) == p.getPlayerState()
                         && b.getLocationState(new Location(i + 3, j)) == p.getPlayerState()
-                        && b.getLocationState(new Location(i + 2, j)) == p.getPlayerState())
+                        && b.getLocationState(new Location(i + 2, j)) == LocationState.EMPTY)
                     score += threeInRow * h;
                 // (x0xx)
                 else if (b.getLocationState(new Location(i, j))== p.getPlayerState()
@@ -483,7 +517,7 @@ public class ComputerPlayer20057028 extends IPlayer {
     private void createGame() {
         pmax = new ComputerPlayer20057028(this.getPlayerState());
         LocationState ls = (pmax.getPlayerState() == LocationState.RED) ? LocationState.YELLOW : LocationState.RED;
-        pmin = new ComputerPlayer20057028_Random(ls);
+        pmin = new ComputerPlayer20057028(ls);
         this.con4 = new Connect4(pmax, pmin, gameBoard);
     }
 }

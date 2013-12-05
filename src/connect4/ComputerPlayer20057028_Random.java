@@ -16,7 +16,7 @@ public class ComputerPlayer20057028_Random extends IPlayer {
 
     @Override
 	public int getMove(Board board) {
-        return (int) Math.random() * 7;
+        return (int) (Math.random() * 7);
 	}
 
 
