@@ -49,8 +49,27 @@ public class ComputerPlayer20057028Test {
         board.setLocationState(new Location(4, 5), p1.getPlayerState());
         board.setLocationState(new Location(0, 4), p1.getPlayerState());
         //p1.getMove(board);
-        assertEquals(1200, p1.eval(board, p1));
+        assertEquals(3500 * p1.getDIFFICULTY(), p1.eval(board, p1));
         board.clear();
+
+        //diag
+        board.setLocationState(new Location(4, 3), p2.getPlayerState());
+        board.setLocationState(new Location(3, 4), p2.getPlayerState());
+        board.setLocationState(new Location(3, 5), p1.getPlayerState());
+        board.setLocationState(new Location(4, 4), p1.getPlayerState());
+        assertEquals(5000 * p1.getDIFFICULTY(), p1.eval(board, p1));
+    }
+
+    @Test
+    public void threeInRow() {
+        //hor
+        board.setLocationState(new Location(3, 3), p1.getPlayerState());
+        board.setLocationState(new Location(4, 3), p1.getPlayerState());
+        board.setLocationState(new Location(5, 3), p1.getPlayerState());
+        //3 one in a row = 1500
+        //1 horizontal 2 in a row = 7500
+        //1 horizontal 3 in a row = 75000
+        assertEquals(84000 * p1.getDIFFICULTY(), p1.eval(board, p1));
     }
 
 }

@@ -34,7 +34,6 @@ public class HumanPlayer extends IPlayer {
     }
 
     private int getInt(String prompt) throws InputMismatchException {
-
         StdOut.println(prompt);
         try {
             int output = StdIn.readInt();

@@ -37,7 +37,18 @@ public class ComputerPlayer20057028 extends IPlayer {
 	public int getMove(Board board) {
         this.gameBoard = copyBoard(board);
         createGame();
-        if (gameBoard.getLocationState(new Location(3, gameBoard.getNoRows() - 1)) == LocationState.EMPTY) return 3;
+
+        if (gameBoard.getLocationState(new Location(3, gameBoard.getNoRows() - 1)) == LocationState.EMPTY)
+            return 3;
+
+        if (gameBoard.getLocationState(new Location(3, gameBoard.getNoRows() - 1)) == pmin.getPlayerState()
+                && gameBoard.getLocationState(new Location(2, gameBoard.getNoRows() - 1)) == LocationState.EMPTY)
+            return 2;
+        else if (gameBoard.getLocationState(new Location(3, gameBoard.getNoRows() - 1)) == pmin.getPlayerState()
+                && gameBoard.getLocationState(new Location(2, gameBoard.getNoRows() - 1)) == pmin.getPlayerState()
+                && gameBoard.getLocationState(new Location(4, gameBoard.getNoRows() - 1)) == LocationState.EMPTY)
+            return 4;
+
 
         ArrayList<Location> moves = getLegalMoves(gameBoard);
         //ArrayList<connect4.Location> moves = generateMoves();
@@ -54,7 +65,7 @@ public class ComputerPlayer20057028 extends IPlayer {
 
     private int negamax(Board b, int depth, int alpha, int beta, int sign, IPlayer player) {
 
-        if (isWin(b, player)) return sign * Integer.MAX_VALUE;
+        if (isWin(b, player)) return sign * -Integer.MAX_VALUE;
         if (isDraw(b) || depth == 0) {
             return sign * eval(b, player);
         }

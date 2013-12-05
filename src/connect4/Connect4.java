@@ -34,9 +34,9 @@ public class Connect4 {
 	 */
 	public void nextPlayer() {
 		if (currentPlayer == p1)
-			currentPlayer = p1;
-		else 
 			currentPlayer = p2;
+		else 
+			currentPlayer = p1;
 	}
 
 	/**
@@ -135,7 +135,7 @@ public class Connect4 {
 	/**
 	 * @param args
 	 */
-	public static void main(String[] args) {
+	public static void main(String[] args) throws InterruptedException {
         Board board = new Board(7, 6);
         IPlayer player1, player2;
         player1 = player2 = null;
@@ -143,9 +143,44 @@ public class Connect4 {
         connect4.run();
 	}
 
-    private void run() {
+    private void run() throws InterruptedException {
         int option = setUpMenu();
         createGame(option);
+        this.currentPlayer = p1;
+        boolean isWin = false;
+        StdOut.println("Player one: " + p1.getPlayerState());
+        StdOut.println("Player two: " + p2.getPlayerState());
+        StdOut.println("Current: " + currentPlayer.getPlayerState());
+        while (true) {
+            printGrid();
+            while(!takeTurn()) {
+                takeTurn();
+                if (currentPlayer instanceof ComputerPlayer20057028) Thread.sleep(1000);
+            }
+            if (isDraw()) {
+                StdOut.println("Game is a draw!!");
+                break;
+            }
+            if (isWin(board)) {
+                printGrid();
+                StdOut.println("\nWinner is: " + currentPlayer.getPlayerState());
+                break;
+            }
+            nextPlayer();
+        }
+
+    }
+
+    private void printGrid() {
+        StdOut.println();
+        for (int i = 0; i < board.getNoRows(); i++) {
+            for (int j = 0; j < board.getNoRows(); j++) {
+                StdOut.print(board.getLocationState(new Location(j, i)) + "\t");
+                if (j < board.getNoRows() + 1 && board.getLocationState(new Location(j, i)) == LocationState.RED)
+                    StdOut.print("   ");
+            }
+            StdOut.println();
+        }
     }
 
     private void createGame(int choice) {
@@ -166,6 +201,10 @@ public class Connect4 {
                 this.p1 = new ComputerPlayer20057028(LocationState.RED);
                 this.p2 = new ComputerPlayer20057028(LocationState.YELLOW);
                 break;
+            case 5:
+                this.p1 = new RandomPlayer(LocationState.RED);
+                this.p2 = new ComputerPlayer20057028(LocationState.YELLOW);
+                break;
             default:
                 setUpMenu();
                 break;
@@ -184,8 +223,12 @@ public class Connect4 {
         StdOut.println("|\t2: Computer vs Human               | ");
         StdOut.println("|\t3: Human vs Human                  | ");
         StdOut.println("|\t4: Computer vs Computer            | ");
+        StdOut.println("|\t5: DumbPlayer vs Computer          | ");
         StdOut.println(" _____________________________________ ");
         int choice = getInt("|\tChoose Option:                     | ");
+        StdOut.println("|                                     | ");
+        StdOut.println("|                                     | ");
+        StdOut.println(" _____________________________________ ");
 
         return choice;
     }
