@@ -85,7 +85,7 @@ public class ComputerPlayer20057028 extends IPlayer {
                 }
             }
             if (x > alpha) alpha = x;
-            if (alpha >= beta) break;
+            if (alpha >= beta) return alpha;
         }
         return max;
     }
