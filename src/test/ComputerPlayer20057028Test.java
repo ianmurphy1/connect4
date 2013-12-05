@@ -83,5 +83,4 @@ public class ComputerPlayer20057028Test {
         assertTrue(board.getLocationState(new Location(6,3)) == LocationState.RED);
         assertTrue(p1.isWin(board, p1));
     }
-
 }

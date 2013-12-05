@@ -134,6 +134,14 @@ public class DiffConnect4Test {
         board.setLocationState(new Location(3, 2), LocationState.YELLOW);
         assertFalse(c4.isWin(board));
         board.clear();
+
+        board.setLocationState(new Location(0, 0), LocationState.RED);
+        board.setLocationState(new Location(1, 1), LocationState.RED);
+        board.setLocationState(new Location(2, 2), LocationState.RED);
+        board.setLocationState(new Location(3, 3), LocationState.RED);
+        c4.nextPlayer();
+        assertTrue(c4.isWin(board));
+        board.clear();
     }
 
 }
