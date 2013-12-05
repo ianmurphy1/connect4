@@ -1,8 +1,7 @@
 package connect4;
 
+//import edu.princeton.cs.introcs.StdOut;
 
-import edu.princeton.cs.introcs.StdOut;
-import edu.princeton.cs.introcs.Stopwatch;
 
 /**
  * 
@@ -40,7 +39,7 @@ public class Connect4 {
 	 * @return boolean to detect winner
 	 */
 	public boolean isWin(Board board) {
-       if (numTurns < 7) return false;
+       //if (numTurns < 7) return false;
 		return checkVertical(board)|| checkHorizontal(board) || checkDiagFor(board) || checkDiagBack(board);
 	}
 
@@ -67,7 +66,6 @@ public class Connect4 {
                     return true;
             }
         }
-
         return false;
     }
 
@@ -135,41 +133,41 @@ public class Connect4 {
 	public static void main(String[] args) {
         int ai = 0;
         int random = 0;
-        Stopwatch s = new Stopwatch();
+       // Stopwatch s = new Stopwatch();
         for (int i = 0; i < 1; i++) {
-//            IPlayer player1 = new HumanPlayer(LocationState.YELLOW);
+//            connect4.IPlayer player1 = new connect4.HumanPlayer(connect4.LocationState.YELLOW);
             IPlayer p1 = new ComputerPlayer20057028(LocationState.YELLOW);
-            //IPlayer p2 = new ComputerPlayer20057028_Random(LocationState.RED);
-            //IPlayer p2 = new ComputerPlayer_WinTake_Block(LocationState.RED);
+            //connect4.IPlayer p2 = new ComputerPlayer20057028_Random(connect4.LocationState.RED);
+            //connect4.IPlayer p2 = new ComputerPlayer_WinTake_Block(connect4.LocationState.RED);
             IPlayer p2 = new HumanPlayer(LocationState.RED);
             Board board = new Board(7, 6);
-            Connect4 c4 = new Connect4(p1, p2, board);
-            StdOut.println("New board Made");
-            while (!c4.isWin(board) && !c4.isDraw()) {
-                StdOut.println("made into first loop");
-                while (!c4.isDraw()) {
-                    StdOut.println(" taking turn ");
-                    if(c4.takeTurn()) break;
+            Connect4 connect4 = new Connect4(p1, p2, board);
+           // StdOut.println("New board Made");
+            while (!connect4.isWin(board) && !connect4.isDraw()) {
+             //   StdOut.println("made into first loop");
+                while (!connect4.isDraw()) {
+               //     StdOut.println(" taking turn ");
+                    if(connect4.takeTurn()) break;
                 }
                 //StdOut.println("Turn " + c4.numTurns + " done");
-                if (c4.isWin(board)) break;
-                c4.nextPlayer();
+                if (connect4.isWin(board)) break;
+                connect4.nextPlayer();
                 if (p1 instanceof HumanPlayer || p2 instanceof HumanPlayer) {
-                    System.out.println(c4.getBoard().toString());          //////DRAW BOARD
+                    System.out.println(connect4.getBoard().toString());          //////DRAW BOARD
                 }
             }
-            c4.nextPlayer();
+            connect4.nextPlayer();
             System.out.print("." + ((i % 100 == 0) ? "\n" : ""));
 //            System.out.print("." );
 //            System.out.println(connect4.currentPlayer.getPlayerState());
 //            System.out.println(connect4.currentPlayer.getPlayerState()+"\nred " + newAiWins + " yell " + oldWins);
             //System.out.println(c4.getBoard());
-            if (c4.currentPlayer.getPlayerState() == LocationState.RED) ai++;
-            if (c4.currentPlayer.getPlayerState() == LocationState.YELLOW) random++;
-            System.out.println(c4.getBoard());
+            if (connect4.currentPlayer.getPlayerState() == LocationState.RED) ai++;
+            if (connect4.currentPlayer.getPlayerState() == LocationState.YELLOW) random++;
+            System.out.println(connect4.getBoard());
         }
         System.out.println("\nAI: " + ai + "\nRandom: " + random);
-        System.out.println("time: " + s.elapsedTime());
+      //  System.out.println("time: " + s.elapsedTime());
 	}
 
 }

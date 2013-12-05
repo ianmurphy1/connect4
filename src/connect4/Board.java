@@ -30,7 +30,7 @@ public class Board {
 
 	/**
 	 * This method clears the board by setting each element to
-	 * connect4.LocationState.EMPTY
+	 * connect4.connect4.LocationState.EMPTY
 	 * 
 	 * @return Nothing
 	 */
@@ -47,7 +47,7 @@ public class Board {
 	 * location
 	 * 
 	 * @param location
-	 * @return connect4.Location state as connect4.LocationState
+	 * @return connect4.connect4.Location state as connect4.connect4.LocationState
 	 * @see Location
 	 * @see LocationState
 	 */

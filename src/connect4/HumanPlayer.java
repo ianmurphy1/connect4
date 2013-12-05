@@ -14,14 +14,12 @@ public class HumanPlayer extends IPlayer {
     @Override
     public int getMove(Board board) {
         int col = getInt("Enter Column Number");
-        int x = checkCol(col, board);
 
         while (true) {
-            if (isValid(col, board) && x >= 0) break;
+            if (isValid(col, board) && (checkCol(col, board) >= 0)) break;
             col = getInt("Not valid. Reenter Valid Column");
-            x = checkCol(col, board);
         }
-        return x;
+        return col;
     }
 
     public boolean isValid(int col, Board board) {
@@ -36,7 +34,8 @@ public class HumanPlayer extends IPlayer {
     }
 
     private int getInt(String prompt) throws InputMismatchException {
-        StdOut.print(prompt);
+
+        StdOut.println(prompt);
         try {
             int output = StdIn.readInt();
             return output;

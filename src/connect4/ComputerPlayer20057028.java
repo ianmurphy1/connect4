@@ -1,7 +1,6 @@
 package connect4;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 
 /**
  * 
@@ -18,7 +17,7 @@ public class ComputerPlayer20057028 extends IPlayer {
     private Board gameBoard;
     int[] sign = new int[] {1, -1};
     private int bestColumn;
-    private final int DEPTH = 5; //Set higher to allow for deeper scans and harder AI
+    private final int DEPTH = 1; //Set higher to allow for deeper scans and harder AI
     private final int DIFFICULTY = 100; //Multiplier for scores to increase difficulty
 
 	public ComputerPlayer20057028(LocationState playerState) {
@@ -42,8 +41,9 @@ public class ComputerPlayer20057028 extends IPlayer {
         if (gameBoard.getLocationState(new Location(3, gameBoard.getNoRows() - 1)) == LocationState.EMPTY) return 3;
 
         ArrayList<Location> moves = getLegalMoves(gameBoard);
+        //ArrayList<connect4.Location> moves = generateMoves()
         Location optimalMove = null;
-        int maxScore = Integer.MIN_VALUE;
+        int maxScore = -Integer.MAX_VALUE;
 
         for (Location move: moves) {
             gameBoard.setLocationState(move, pmax.getPlayerState());
@@ -52,44 +52,48 @@ public class ComputerPlayer20057028 extends IPlayer {
         }
 
        //for (int i = 0; i < lmoves.length; i++) {
-         //   Location move = new Location(lmoves[i], getRow(lmoves[i], gameBoard));
+         //   connect4.Location move = new connect4.Location(lmoves[i], getRow(lmoves[i], gameBoard));
          //   gameBoard.setLocationState(move, pmax.getPlayerState());
           //  negamax(gameBoard, DEPTH, Integer.MIN_VALUE, Integer.MAX_VALUE, pmax);
-        //    gameBoard.setLocationState(move, LocationState.EMPTY);
+        //    gameBoard.setLocationState(move, connect4.LocationState.EMPTY);
       //  }
 
 
         int choice = bestColumn;
+        //int choice = optimalMove.getX();
+        //System.out.println("TRYING COLUMN: " + optimalMove.getX());
         return choice;
 	}
 
     private int negamax(Board b, int depth, int alpha, int beta, int sign, IPlayer player) {
-        if (con4.isWin(b) || isDraw(b) || depth == 0) {
-            //int i = (player.getPlayerState() == pmax.getPlayerState()) ? 0 : 1;
+
+        if (con4.isWin(b)) return Integer.MAX_VALUE;
+
+
+        if (isDraw(b) || depth == 0) {
             return sign * eval(b, player);
         }
 
         IPlayer opp;
-        LocationState ls = (player.getPlayerState() == LocationState.RED) ? LocationState.YELLOW : LocationState.RED;
         opp = (pmax.getPlayerState() == player.getPlayerState()) ? pmin : pmax;
 
-        int max = -Integer.MAX_VALUE;
+        int max = alpha;
         ArrayList<Location> moves = getLegalMoves(b);
 
         for (Location move : moves) {
+            System.out.println("Trying move at: " + move.getX());
             b.setLocationState(move, player.getPlayerState());
-            int x = -negamax(b, depth - 1, -beta, -alpha, -sign, opp);
+            int x = -negamax(b, depth - 1, -beta, -max, -sign, opp);
             b.setLocationState(move, LocationState.EMPTY);
+            System.out.println("Undoing move at: " + move.getX());
             if (x > max) {
                 max = x;
                 bestColumn = move.getX();
+                System.out.println("Best Move: " + bestColumn);
             }
-           // if (x > alpha) alpha = x;
-            //if (alpha >= max) return alpha;
-            alpha = Math.max(alpha, x);
-            if (alpha >= beta) break;
+            if (x >= beta) return x;
         }
-        System.out.println(max);
+       // System.out.println(max);
         return max;
     }
 
@@ -113,17 +117,30 @@ public class ComputerPlayer20057028 extends IPlayer {
             if (row >= 0) {
                 Location l = new Location(i, row);
                 list.add(l);
+                System.out.println("Legal Move " + list.size() + " is at: " + l.getX() + ", " + l.getY());
             }
         }
         return list;
     }
 
+    private ArrayList<Location> generateMoves(Location m, IPlayer p) {
+        ArrayList<Location> moves = new ArrayList<Location>();
+        gameBoard.setLocationState(m, p.getPlayerState());
+        for (int i = 0; i < gameBoard.getNoCols(); i++) {
+            int row = getRow(i, gameBoard);
+            if (row >= 0) {
+                Location l = new Location(i, row);
+                moves.add(l);
+            }
+        }
+        gameBoard.setLocationState(m, LocationState.EMPTY);
+        return moves;
+    }
 
 
 
 
-
-    private int eval(Board b, IPlayer p) {
+    public int eval(Board b, IPlayer p) {
 
         int score = 0;
         //Multipliers based on whether possible rows are vertical, horizontal or diagonal
