@@ -17,7 +17,7 @@ public class ComputerPlayer20057028 extends IPlayer {
     private int bestColumn, bestColumnScore;
 
     private final int DEPTH = 5; //Set higher to allow for deeper scans and harder AI
-    private final int DIFFICULTY = 3000; //Multiplier for scores to increase difficulty
+    private final int DIFFICULTY = 10000; //Multiplier for scores to increase difficulty
 
 	public ComputerPlayer20057028(LocationState playerState) {
 		super(playerState);
@@ -54,36 +54,28 @@ public class ComputerPlayer20057028 extends IPlayer {
 
     private int negamax(Board b, int depth, int alpha, int beta, int sign, IPlayer player) {
 
-        if (isWin(b, player)) return Integer.MAX_VALUE;
-
+        if (isWin(b, player)) return sign * Integer.MAX_VALUE;
         if (isDraw(b) || depth == 0) {
             return sign * eval(b, player);
         }
         IPlayer opp;
         opp = (pmax.getPlayerState() == player.getPlayerState()) ? pmin : pmax;
-
         int max = -Integer.MAX_VALUE;
         ArrayList<Location> moves = getLegalMoves(b);
-        int i = 0;
         for (Location move : moves) {
             b.setLocationState(move, player.getPlayerState());
             int x = -negamax(b, depth - 1, -beta, -alpha, sign * -1, opp);
             b.setLocationState(move, LocationState.EMPTY);
-           // System.out.println("Undoing move at: " + move.getX());
             if (x > max) {
                 max = x;
                 if (x > bestColumnScore) {
                     bestColumnScore = x;
                     bestColumn = move.getX();
                 }
-                //System.out.println("Best Move: " + bestColumn);
-                //System.out.println("Best Move Score: " + x);
-                //System.out.println("Best Column Move Score: " + bestColumnScore);
             }
             if (x > alpha) alpha = x;
-            if (alpha >= beta) return alpha;
+            if (alpha >= beta) break;
         }
-       // System.out.println(max);
         return max;
     }
 
@@ -162,7 +154,7 @@ public class ComputerPlayer20057028 extends IPlayer {
         //Multipliers based on whether possible rows are vertical, horizontal or diagonal
         int v = 5, d = 10, h = 15;
         //Scores for tokens in a row
-        int oneInRow = 100, twoInRow = 500, threeInRow = 1000;
+        int oneInRow = 100, twoInRow = 500, threeInRow = 5000;
 
         /******************************************************************************
          *                                                                            *
@@ -500,6 +492,57 @@ public class ComputerPlayer20057028 extends IPlayer {
             }
         }
 
+        /******************************************************************************
+         *                                                                            *
+         *                       3 IN A ROW OPEN CHECKS                               *
+         *                                                                            *
+         ******************************************************************************/
+
+        // Check for open horizontal (0xxx0)
+        for (int i = 0; i < b.getNoCols() - 5; i++) {
+            for (int j = 0; j < b.getNoRows(); j++) {
+                if (b.getLocationState(new Location(i, j))== LocationState.EMPTY
+                        && b.getLocationState(new Location(i + 1, j)) == p.getPlayerState()
+                        && b.getLocationState(new Location(i + 2, j)) == p.getPlayerState()
+                        && b.getLocationState(new Location(i + 3, j)) == p.getPlayerState()
+                        && b.getLocationState(new Location(i + 4, j)) == p.getPlayerState())
+                    score += 2 * threeInRow * h;
+            }
+        }
+
+        // Diagonal back
+        // 0
+        //  x
+        //   x
+        //    x
+        //     0
+        for (int i = 0; i < b.getNoCols() - 4; i++) {
+            for (int j = b.getNoRows() - 5; j >= 0; j--) {
+                if (b.getLocationState(new Location(i, j)) == LocationState.EMPTY
+                        && b.getLocationState(new Location(i + 4, j + 4)) == LocationState.EMPTY
+                        && b.getLocationState(new Location(i + 1, j + 1)) == p.getPlayerState()
+                        && b.getLocationState(new Location(i + 2, j + 2)) == p.getPlayerState()
+                        && b.getLocationState(new Location(i + 3, j + 3)) == p.getPlayerState())
+                    score += 2 * threeInRow * d;
+            }
+        }
+
+        //Diag Forward
+        //     0
+        //    x
+        //   x
+        //  x
+        // 0
+        for (int i =  b.getNoCols() - 1; i >= 4; i--) {
+            for (int j = b.getNoRows() - 5; j >= 0; j--) {
+                if (b.getLocationState(new Location(i, j)) == LocationState.EMPTY
+                        && b.getLocationState(new Location(i - 4, j + 4)) == LocationState.EMPTY
+                        && b.getLocationState(new Location(i - 1, j + 1)) == p.getPlayerState()
+                        && b.getLocationState(new Location(i - 2, j + 2)) == p.getPlayerState()
+                        && b.getLocationState(new Location(i - 3, j + 3)) == p.getPlayerState())
+                    score += 2 * threeInRow * d;
+            }
+        }
         return score * DIFFICULTY;
     }
 
@@ -507,5 +550,9 @@ public class ComputerPlayer20057028 extends IPlayer {
         pmax = new ComputerPlayer20057028(this.getPlayerState());
         LocationState ls = (pmax.getPlayerState() == LocationState.RED) ? LocationState.YELLOW : LocationState.RED;
         pmin = new ComputerPlayer20057028(ls);
+    }
+
+    public int getDIFFICULTY() {
+        return DIFFICULTY;
     }
 }

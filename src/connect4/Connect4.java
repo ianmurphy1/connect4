@@ -3,6 +3,12 @@ package connect4;
 //import edu.princeton.cs.introcs.StdOut;
 
 
+import edu.princeton.cs.introcs.StdIn;
+import edu.princeton.cs.introcs.StdOut;
+import edu.princeton.cs.introcs.Stopwatch;
+
+import java.util.InputMismatchException;
+
 /**
  * 
  * Class to manage the connect 4 game
@@ -10,16 +16,16 @@ package connect4;
  */
 public class Connect4 {
 
-	private IPlayer human, computer;
+	private IPlayer p1, p2;
 	private Board board;
 	private IPlayer currentPlayer;
 	private int numTurns = 0;
 
-    public Connect4(IPlayer human, IPlayer computer, Board board) {
-        this.human = human;
-        this.computer = computer;
+    public Connect4(IPlayer p1, IPlayer p2, Board board) {
+        this.p1 = p1;
+        this.p2 = p2;
         this.board = board;
-        this.currentPlayer = human;
+        this.currentPlayer = p1;
     }
 
 	
@@ -27,10 +33,10 @@ public class Connect4 {
 	 * Toggles current player 
 	 */
 	public void nextPlayer() {
-		if (currentPlayer == human) 
-			currentPlayer = computer;
+		if (currentPlayer == p1)
+			currentPlayer = p1;
 		else 
-			currentPlayer = human;
+			currentPlayer = p2;
 	}
 
 	/**
@@ -100,7 +106,6 @@ public class Connect4 {
 	 * @return
 	 */
 	public boolean isDraw() {
-		//TODO
 		return numTurns == board.getNoCols() * board.getNoRows();
 	}
 
@@ -131,43 +136,76 @@ public class Connect4 {
 	 * @param args
 	 */
 	public static void main(String[] args) {
-        int ai = 0;
-        int random = 0;
-       // Stopwatch s = new Stopwatch();
-        for (int i = 0; i < 1; i++) {
-//            connect4.IPlayer player1 = new connect4.HumanPlayer(connect4.LocationState.YELLOW);
-            IPlayer p1 = new ComputerPlayer20057028(LocationState.YELLOW);
-            //connect4.IPlayer p2 = new ComputerPlayer20057028_Random(connect4.LocationState.RED);
-            //connect4.IPlayer p2 = new ComputerPlayer_WinTake_Block(connect4.LocationState.RED);
-            IPlayer p2 = new HumanPlayer(LocationState.RED);
-            Board board = new Board(7, 6);
-            Connect4 connect4 = new Connect4(p1, p2, board);
-           // StdOut.println("New board Made");
-            while (!connect4.isWin(board) && !connect4.isDraw()) {
-             //   StdOut.println("made into first loop");
-                while (!connect4.isDraw()) {
-               //     StdOut.println(" taking turn ");
-                    if(connect4.takeTurn()) break;
-                }
-                //StdOut.println("Turn " + c4.numTurns + " done");
-                if (connect4.isWin(board)) break;
-                connect4.nextPlayer();
-                if (p1 instanceof HumanPlayer || p2 instanceof HumanPlayer) {
-                    System.out.println(connect4.getBoard().toString());          //////DRAW BOARD
-                }
-            }
-            connect4.nextPlayer();
-            System.out.print("." + ((i % 100 == 0) ? "\n" : ""));
-//            System.out.print("." );
-//            System.out.println(connect4.currentPlayer.getPlayerState());
-//            System.out.println(connect4.currentPlayer.getPlayerState()+"\nred " + newAiWins + " yell " + oldWins);
-            //System.out.println(c4.getBoard());
-            if (connect4.currentPlayer.getPlayerState() == LocationState.RED) ai++;
-            if (connect4.currentPlayer.getPlayerState() == LocationState.YELLOW) random++;
-            System.out.println(connect4.getBoard());
-        }
-        System.out.println("\nAI: " + ai + "\nRandom: " + random);
-      //  System.out.println("time: " + s.elapsedTime());
+        Board board = new Board(7, 6);
+        IPlayer player1, player2;
+        player1 = player2 = null;
+        Connect4 connect4 = new Connect4(player1, player2, board);
+        connect4.run();
 	}
 
+    private void run() {
+        int option = setUpMenu();
+        createGame(option);
+    }
+
+    private void createGame(int choice) {
+        switch (choice) {
+            case 1:
+                this.p1 = new HumanPlayer(LocationState.RED);
+                this.p2 = new ComputerPlayer20057028(LocationState.YELLOW);
+                break;
+            case 2:
+                this.p1 = new ComputerPlayer20057028(LocationState.RED);
+                this.p2 = new HumanPlayer(LocationState.YELLOW);
+                break;
+            case 3:
+                this.p1 = new HumanPlayer(LocationState.RED);
+                this.p2 = new HumanPlayer(LocationState.YELLOW);
+                break;
+            case 4:
+                this.p1 = new ComputerPlayer20057028(LocationState.RED);
+                this.p2 = new ComputerPlayer20057028(LocationState.YELLOW);
+                break;
+            default:
+                setUpMenu();
+                break;
+        }
+    }
+
+    private static int setUpMenu() {
+        StdOut.println(" _____________________________________ ");
+        StdOut.println("|                                     | ");
+        StdOut.println("|             CONNECT 4               | ");
+        StdOut.println("|                                     | ");
+        StdOut.println("| | | | | | | | | | | | | | | | | | | | ");
+        StdOut.println("|           Choose type of game       | ");
+        StdOut.println("|                                     | ");
+        StdOut.println("|\t1: Human vs Computer               | ");
+        StdOut.println("|\t2: Computer vs Human               | ");
+        StdOut.println("|\t3: Human vs Human                  | ");
+        StdOut.println("|\t4: Computer vs Computer            | ");
+        StdOut.println(" _____________________________________ ");
+        int choice = getInt("|\tChoose Option:                     | ");
+
+        return choice;
+    }
+
+
+
+
+    private static int getInt(String prompt) throws InputMismatchException {
+        StdOut.println(prompt);
+        try {
+            int output = StdIn.readInt();
+            return output;
+        } catch (InputMismatchException e) {
+            StdIn.readLine();
+            StdOut.println("Not valid");
+            StdOut.println("Go again.");
+        }
+        return -1;
+    }
+
+
 }
+

@@ -38,7 +38,7 @@ public class ComputerPlayer20057028Test {
         board.setLocationState(new Location(2, 5), p2.getPlayerState());
         board.setLocationState(new Location(4, 5), p1.getPlayerState());
         //p1.getMove(board);
-        assertEquals(200, p1.eval(board, p1));
+        assertEquals(1000 * p1.getDIFFICULTY(), p1.eval(board, p1));
         board.clear();
     }
 
