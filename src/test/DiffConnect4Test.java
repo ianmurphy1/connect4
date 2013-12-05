@@ -41,6 +41,14 @@ public class DiffConnect4Test {
         assertTrue(c4.isWin(board));
         board.clear();
 
+        board.setLocationState(new Location(6, 0), LocationState.YELLOW);
+        board.setLocationState(new Location(6, 1), LocationState.YELLOW);
+        board.setLocationState(new Location(6, 2), LocationState.YELLOW);
+        board.setLocationState(new Location(6, 3), LocationState.YELLOW);
+        c4.nextPlayer();
+        assertTrue(c4.isWin(board));
+        board.clear();
+
         board.setLocationState(new Location(0, 1), LocationState.RED);
         board.setLocationState(new Location(0, 2), LocationState.RED);
         board.setLocationState(new Location(0, 3), LocationState.RED);
@@ -62,6 +70,13 @@ public class DiffConnect4Test {
         board.setLocationState(new Location(2, 0), LocationState.RED);
         board.setLocationState(new Location(3, 0), LocationState.RED);
         c4.nextPlayer();
+        assertTrue(c4.isWin(board));
+        board.clear();
+
+        board.setLocationState(new Location(3, 0), LocationState.RED);
+        board.setLocationState(new Location(4, 0), LocationState.RED);
+        board.setLocationState(new Location(5, 0), LocationState.RED);
+        board.setLocationState(new Location(6, 0), LocationState.RED);
         assertTrue(c4.isWin(board));
         board.clear();
 
@@ -93,6 +108,13 @@ public class DiffConnect4Test {
         board.setLocationState(new Location(2, 2), LocationState.RED);
         board.setLocationState(new Location(3, 1), LocationState.RED);
         c4.nextPlayer();
+        assertTrue(c4.isWin(board));
+        board.clear();
+
+        board.setLocationState(new Location(6, 0), LocationState.RED);
+        board.setLocationState(new Location(5, 1), LocationState.RED);
+        board.setLocationState(new Location(4, 2), LocationState.RED);
+        board.setLocationState(new Location(3, 3), LocationState.RED);
         assertTrue(c4.isWin(board));
         board.clear();
     }

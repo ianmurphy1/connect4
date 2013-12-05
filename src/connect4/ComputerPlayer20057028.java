@@ -90,8 +90,8 @@ public class ComputerPlayer20057028 extends IPlayer {
         return max;
     }
 
-    private boolean isWin(Board b, IPlayer p) {
-        for (int i = 0; i < b.getNoCols() - 4; i++) {
+    public boolean isWin(Board b, IPlayer p) {
+        for (int i = 0; i < b.getNoCols() - 3; i++) {
             for (int j = 0; j < b.getNoRows(); j++) {
                 if (b.getLocationState(new Location(i, j)) == p.getPlayerState()
                         && b.getLocationState(new Location(i + 1, j)) == p.getPlayerState()

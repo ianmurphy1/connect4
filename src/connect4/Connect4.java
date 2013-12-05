@@ -50,7 +50,7 @@ public class Connect4 {
 	}
 
     private boolean checkHorizontal(Board board) {
-        for (int i = 0; i < board.getNoCols() - 4; i++) {
+        for (int i = 0; i < board.getNoCols() - 3; i++) {
             for (int j = 0; j < board.getNoRows(); j++) {
                 if (board.getLocationState(new Location(i, j)) == currentPlayer.getPlayerState()
                         && board.getLocationState(new Location(i + 1, j)) == currentPlayer.getPlayerState()

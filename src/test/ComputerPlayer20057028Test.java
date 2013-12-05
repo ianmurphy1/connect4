@@ -58,6 +58,7 @@ public class ComputerPlayer20057028Test {
         board.setLocationState(new Location(3, 5), p1.getPlayerState());
         board.setLocationState(new Location(4, 4), p1.getPlayerState());
         assertEquals(5000 * p1.getDIFFICULTY(), p1.eval(board, p1));
+        board.clear();
     }
 
     @Test
@@ -70,6 +71,17 @@ public class ComputerPlayer20057028Test {
         //1 horizontal 2 in a row = 7500
         //1 horizontal 3 in a row = 75000
         assertEquals(84000 * p1.getDIFFICULTY(), p1.eval(board, p1));
+        board.clear();
+    }
+
+    @Test
+    public void testWin() {
+        board.setLocationState(new Location(3, 3), p1.getPlayerState());
+        board.setLocationState(new Location(4, 3), p1.getPlayerState());
+        board.setLocationState(new Location(5, 3), p1.getPlayerState());
+        board.setLocationState(new Location(6, 3), p1.getPlayerState());
+        assertTrue(board.getLocationState(new Location(6,3)) == LocationState.RED);
+        assertTrue(p1.isWin(board, p1));
     }
 
 }
