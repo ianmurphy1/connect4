@@ -1,9 +1,6 @@
 package connect4;
 
 import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Random;
 
 /**
  * 
@@ -13,7 +10,7 @@ import java.util.Random;
  * @author Frank
  *
  */
-public class ComputerPlayer20057028 extends IPlayer {
+public class ComputerPlayer20057028COPY extends IPlayer {
 
     private IPlayer pmax, pmin;  //pmax = this player, pmin is the player the ai is playing against.
     private Board gameBoard;
@@ -22,7 +19,7 @@ public class ComputerPlayer20057028 extends IPlayer {
     private final int DEPTH = 5; //Set higher to allow for deeper scans and harder AI
     private final int DIFFICULTY = 4000; //Multiplier for scores to increase difficulty
 
-	public ComputerPlayer20057028(LocationState playerState) {
+	public ComputerPlayer20057028COPY(LocationState playerState) {
 		super(playerState);
 	}
 
@@ -69,17 +66,17 @@ public class ComputerPlayer20057028 extends IPlayer {
             gameBoard.setLocationState(move, pmax.getPlayerState());
             //call to the recursive negamax algorithm
             negamax(gameBoard, DEPTH, -Integer.MAX_VALUE, Integer.MAX_VALUE, 1, pmax);
-            //int score = negamax(gameBoard, DEPTH, -Integer.MAX_VALUE, Integer.MAX_VALUE, 1, pmax);
+            int score = negamax(gameBoard, DEPTH, -Integer.MAX_VALUE, Integer.MAX_VALUE, 1, pmax);
             //System.out.println("This moves score is: " + score);
-           // if (score == bestColumnScore) {
-           //     dups.add(move);
-           //     moreThanOne = true;
-           // }
+            //if (score == bestColumnScore) {
+            //    dups.add(move);
+             //   moreThanOne = true;
+            //}
 
-            //if (score > bestColumnScore) {  //If score form negamax is better than the current column score
-           //     bestColumnScore = score;    //change the best column score
-            //    bestColumn = move.getX();
-           // }
+            if (score > bestColumnScore) {  //If score form negamax is better than the current column score
+                bestColumnScore = score;    //change the best column score
+                bestColumn = move.getX();
+            }
             gameBoard.setLocationState(move, LocationState.EMPTY);
         }
         //if (moreThanOne) {
@@ -125,8 +122,8 @@ public class ComputerPlayer20057028 extends IPlayer {
                 if (x > bestColumnScore) {  //If score form negamax is better than the current column score
                     bestColumnScore = x;    //change the best column score
                     bestColumn = move.getX();
-                   // System.out.println("This moves score is: " + bestColumnScore);
-                //    System.out.println("Placing move at: (" + move.getX() + ").");
+                    //System.out.println("This moves score is: " + bestColumnScore);
+                    //System.out.println("Placing move at: (" + move.getX() + ").");
                 }
             }
             if (x > alpha) alpha = x;
@@ -678,7 +675,7 @@ public class ComputerPlayer20057028 extends IPlayer {
     private void createGame() {
         pmax = this;
         LocationState ls = (this.getPlayerState() == LocationState.RED) ? LocationState.YELLOW : LocationState.RED;
-        pmin = new ComputerPlayer20057028(ls);
+        pmin = new ComputerPlayer20057028COPY(ls);
     }
 
     public int getDIFFICULTY() {
