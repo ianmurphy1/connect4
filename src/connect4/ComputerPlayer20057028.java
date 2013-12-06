@@ -17,7 +17,7 @@ public class ComputerPlayer20057028 extends IPlayer {
     private Board gameBoard;
     private double bestColumnScore;
     private int bestColumn;
-    private final int DEPTH = 7; //Set higher to allow for deeper scans and harder AI
+    private final int DEPTH = 5; //Set higher to allow for deeper scans and harder AI
     private final int DIFFICULTY = 40; //Multiplier for scores to increase difficulty
 
 	public ComputerPlayer20057028(LocationState playerState) {
@@ -155,10 +155,8 @@ public class ComputerPlayer20057028 extends IPlayer {
                 if (b.getLocationState(new Location(i, j)) == p.getPlayerState()
                         && b.getLocationState(new Location(i + 1, j)) == p.getPlayerState()
                         && b.getLocationState(new Location(i + 2, j)) == p.getPlayerState()
-                        && b.getLocationState(new Location(i + 3, j)) == p.getPlayerState()) {
-                    //isWin = true;
+                        && b.getLocationState(new Location(i + 3, j)) == p.getPlayerState())
                     return true;
-                }
             }
         }
 
@@ -167,10 +165,8 @@ public class ComputerPlayer20057028 extends IPlayer {
                 if (b.getLocationState(new Location(i, j)) == p.getPlayerState()
                         && b.getLocationState(new Location(i, j - 1)) == p.getPlayerState()
                         && b.getLocationState(new Location(i, j - 2)) == p.getPlayerState()
-                        && b.getLocationState(new Location(i, j - 3)) == p.getPlayerState()) {
-                   // isWin = true;
+                        && b.getLocationState(new Location(i, j - 3)) == p.getPlayerState())
                     return true;
-                }
             }
         }
 

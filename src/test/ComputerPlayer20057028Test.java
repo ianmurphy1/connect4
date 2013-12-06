@@ -10,6 +10,13 @@ import static org.junit.Assert.*;
 
 
 /**
+ * Testing class for scores in the AI
+ *
+ * All tests done at:
+ *          private final int DIFFICULTY = 40;
+ *          int v = 10, h = 15, d = 5;
+ *          int oneInRow = 2, twoInRow = 50, threeInRow = 150;
+ *
  * @author Ian Murphy - 20057028
  *         Date: 05/12/13
  */
@@ -37,8 +44,7 @@ public class ComputerPlayer20057028Test {
         board.setLocationState(new Location(0, 5), p1.getPlayerState());
         board.setLocationState(new Location(2, 5), p2.getPlayerState());
         board.setLocationState(new Location(4, 5), p1.getPlayerState());
-        //p1.getMove(board);
-        assertEquals(1000 * p1.getDIFFICULTY(), p1.eval(board, p1));
+        assertEquals(40 * p1.getDIFFICULTY(), p1.eval(board, p1));
         board.clear();
     }
 
@@ -49,7 +55,7 @@ public class ComputerPlayer20057028Test {
         board.setLocationState(new Location(4, 5), p1.getPlayerState());
         board.setLocationState(new Location(0, 4), p1.getPlayerState());
         //p1.getMove(board);
-        assertEquals(3500 * p1.getDIFFICULTY(), p1.eval(board, p1));
+        assertEquals(540 * p1.getDIFFICULTY(), p1.eval(board, p1));
         board.clear();
 
         //diag
@@ -57,7 +63,7 @@ public class ComputerPlayer20057028Test {
         board.setLocationState(new Location(3, 4), p2.getPlayerState());
         board.setLocationState(new Location(3, 5), p1.getPlayerState());
         board.setLocationState(new Location(4, 4), p1.getPlayerState());
-        assertEquals(5000 * p1.getDIFFICULTY(), p1.eval(board, p1));
+        assertEquals(250 * p1.getDIFFICULTY(), p1.eval(board, p1));
         board.clear();
     }
 
@@ -67,10 +73,8 @@ public class ComputerPlayer20057028Test {
         board.setLocationState(new Location(3, 3), p1.getPlayerState());
         board.setLocationState(new Location(4, 3), p1.getPlayerState());
         board.setLocationState(new Location(5, 3), p1.getPlayerState());
-        //3 one in a row = 1500
-        //1 horizontal 2 in a row = 7500
-        //1 horizontal 3 in a row = 75000
-        assertEquals(84000 * p1.getDIFFICULTY(), p1.eval(board, p1));
+        //3 * vert 1 in a rows, 1 * 2 in a row horizontal, 1 * 3 in a row horizontal
+        assertEquals(3060 * p1.getDIFFICULTY(), p1.eval(board, p1));
         board.clear();
     }
 
