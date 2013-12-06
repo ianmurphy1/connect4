@@ -12,7 +12,7 @@ import java.util.ArrayList;
  */
 public class ComputerPlayer20057028 extends IPlayer {
 
-    private IPlayer pmax, pmin;
+    private IPlayer pmax, pmin;  //pmax = this player, pmin is the player the ai is playing against.
     private Board gameBoard;
     private int bestColumn, bestColumnScore;
 
@@ -23,6 +23,11 @@ public class ComputerPlayer20057028 extends IPlayer {
 		super(playerState);
 	}
 
+    /**
+     *
+     * @param board
+     * @return
+     */
     private Board copyBoard(Board board) {
         Board b = new Board(board.getNoCols(), board.getNoRows());
         for (int i = 0; i < b.getNoCols(); i++)
@@ -38,34 +43,50 @@ public class ComputerPlayer20057028 extends IPlayer {
         this.gameBoard = copyBoard(board);
         createGame();
 
+        // If column 3 is empty place a piece there
         if (gameBoard.getLocationState(new Location(3, gameBoard.getNoRows() - 1)) == LocationState.EMPTY)
             return 3;
 
+        // if column 3 has other players token, place it in 2
         if (gameBoard.getLocationState(new Location(3, gameBoard.getNoRows() - 1)) == pmin.getPlayerState()
                 && gameBoard.getLocationState(new Location(2, gameBoard.getNoRows() - 1)) == LocationState.EMPTY)
             return 2;
+        // if col 3 and 2 had opponent tokens play 4
         else if (gameBoard.getLocationState(new Location(3, gameBoard.getNoRows() - 1)) == pmin.getPlayerState()
                 && gameBoard.getLocationState(new Location(2, gameBoard.getNoRows() - 1)) == pmin.getPlayerState()
                 && gameBoard.getLocationState(new Location(4, gameBoard.getNoRows() - 1)) == LocationState.EMPTY)
             return 4;
 
 
-        ArrayList<Location> moves = getLegalMoves(gameBoard);
-        //ArrayList<connect4.Location> moves = generateMoves();
-        bestColumnScore = -Integer.MAX_VALUE;
+        ArrayList<Location> moves = getLegalMoves(gameBoard); // Get locations of legal moves
+        bestColumnScore = -Integer.MAX_VALUE; //Set the best column to track which move is best
         for (Location move: moves) {
-            //System.out.println("Get Move Method Trying move at: " + move.getX());
             gameBoard.setLocationState(move, pmax.getPlayerState());
-            negamax(gameBoard, DEPTH, -Integer.MAX_VALUE, Integer.MAX_VALUE, 1, pmax);
+            //call to the recursive negamax algorithm
+            int score = negamax(gameBoard, DEPTH, -Integer.MAX_VALUE, Integer.MAX_VALUE, 1, pmax);
+            if (score >= bestColumnScore) {  //If score form negamax is better than the current column score
+                bestColumnScore = score;    //change the best column score
+                bestColumn = move.getX();
+            }
             gameBoard.setLocationState(move, LocationState.EMPTY);
         }
         int choice = bestColumn;
         return choice;
 	}
 
+    /**
+     *
+     * @param b
+     * @param depth
+     * @param alpha
+     * @param beta
+     * @param sign
+     * @param player
+     * @return
+     */
     private int negamax(Board b, int depth, int alpha, int beta, int sign, IPlayer player) {
 
-        if (isWin(b, player)) return sign * -Integer.MAX_VALUE;
+        if (isWin(b, player)) return sign * -Integer.MAX_VALUE; //If move results in win, return biggest value possible
         if (isDraw(b) || depth == 0) {
             return sign * eval(b, player);
         }
@@ -75,14 +96,14 @@ public class ComputerPlayer20057028 extends IPlayer {
         ArrayList<Location> moves = getLegalMoves(b);
         for (Location move : moves) {
             b.setLocationState(move, player.getPlayerState());
-            int x = -negamax(b, depth - 1, -beta, -alpha, sign * -1, opp);
+            int x = -negamax(b, depth - 1, -beta, -alpha, -sign, opp);
             b.setLocationState(move, LocationState.EMPTY);
             if (x > max) {
                 max = x;
-                if (x > bestColumnScore) {
-                    bestColumnScore = x;
-                    bestColumn = move.getX();
-                }
+              //  if (x > bestColumnScore) {  //If score form negamax is better than the current column score
+              //      bestColumnScore = x;    //change the best column score
+              //      bestColumn = move.getX();
+                //}
             }
             if (x > alpha) alpha = x;
             if (alpha >= beta) return alpha;
@@ -90,6 +111,13 @@ public class ComputerPlayer20057028 extends IPlayer {
         return max;
     }
 
+    /**
+     * This method returns whether or not a board is at a win state.
+     *
+     * @param b The state of the board to be played
+     * @param p The current player down the tree
+     * @return Whether or not the board is at a win state
+     */
     public boolean isWin(Board b, IPlayer p) {
         for (int i = 0; i < b.getNoCols() - 3; i++) {
             for (int j = 0; j < b.getNoRows(); j++) {
@@ -558,8 +586,8 @@ public class ComputerPlayer20057028 extends IPlayer {
     }
 
     private void createGame() {
-        pmax = new ComputerPlayer20057028(this.getPlayerState());
-        LocationState ls = (pmax.getPlayerState() == LocationState.RED) ? LocationState.YELLOW : LocationState.RED;
+        pmax = this;
+        LocationState ls = (this.getPlayerState() == LocationState.RED) ? LocationState.YELLOW : LocationState.RED;
         pmin = new ComputerPlayer20057028(ls);
     }
 

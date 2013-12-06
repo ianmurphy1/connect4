@@ -16,6 +16,12 @@ import java.util.InputMismatchException;
  */
 public class Connect4 {
 
+
+    private final String RED =    "R";
+    private final String YELLOW = "Y";
+    private final String EMPTY =  " ";
+
+
 	private IPlayer p1, p2;
 	private Board board;
 	private IPlayer currentPlayer;
@@ -147,15 +153,16 @@ public class Connect4 {
         int option = setUpMenu();
         createGame(option);
         this.currentPlayer = p1;
-        boolean isWin = false;
         StdOut.println("Player one: " + p1.getPlayerState());
         StdOut.println("Player two: " + p2.getPlayerState());
         StdOut.println("Current: " + currentPlayer.getPlayerState());
         while (true) {
             printGrid();
-            while(!takeTurn()) {
-                takeTurn();
-                if (currentPlayer instanceof ComputerPlayer20057028) Thread.sleep(1000);
+            while(true) {
+                if (takeTurn()) {
+                    if (currentPlayer instanceof ComputerPlayer20057028) Thread.sleep(1000);
+                    break;
+                }
             }
             if (isDraw()) {
                 StdOut.println("Game is a draw!!");
@@ -174,13 +181,28 @@ public class Connect4 {
     private void printGrid() {
         StdOut.println();
         for (int i = 0; i < board.getNoRows(); i++) {
-            for (int j = 0; j < board.getNoRows(); j++) {
-                StdOut.print(board.getLocationState(new Location(j, i)) + "\t");
-                if (j < board.getNoRows() + 1 && board.getLocationState(new Location(j, i)) == LocationState.RED)
-                    StdOut.print("   ");
+            StdOut.print(i + " ");
+            for (int j = 0; j < board.getNoCols(); j++) {
+                StdOut.print("| ");
+                if (board.getLocationState(new Location(j, i)) == LocationState.RED)
+                    StdOut.print(RED);
+                else if (board.getLocationState(new Location(j, i)) == LocationState.YELLOW)
+                    StdOut.print(YELLOW);
+                else if (board.getLocationState(new Location(j, i)) == LocationState.EMPTY)
+                    StdOut.print(EMPTY);
+                //StdOut.print(" ");
+
+                if (j == board.getNoCols() - 1)StdOut.print("|");
             }
-            StdOut.println();
+
+           // StdOut.print(" |");
+           StdOut.println();
         }
+        for(int i = 0; i < board.getNoCols(); i ++) {
+            if (i == 0) StdOut.print("   [" + i + "]");
+            if (i > 0)StdOut.print("[" + i + "]");
+        }
+        StdOut.println();
     }
 
     private void createGame(int choice) {
