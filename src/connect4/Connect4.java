@@ -15,12 +15,9 @@ import java.util.InputMismatchException;
  *
  */
 public class Connect4 {
-
-
     private final String RED =    "R";
     private final String YELLOW = "Y";
-    private final String EMPTY =  " ";
-
+    private final String EMPTY =  " "; //Strings to print on the grid.
 
 	private IPlayer p1, p2;
 	private Board board;
@@ -46,7 +43,9 @@ public class Connect4 {
 	}
 
 	/**
-	 * Checks if there's a winner
+	 * Checks if there's a winner on the board passed in.
+     * If running tests, comment the line that checks the number of turns.
+     *
 	 * @param board to evaluate for winner 
 	 * @return boolean to detect winner
 	 */
@@ -55,9 +54,15 @@ public class Connect4 {
 		return checkVertical(board)|| checkHorizontal(board) || checkDiagFor(board) || checkDiagBack(board);
 	}
 
+    /**
+     * Method to check the board for a winner horizontally.
+     *
+     * @param board The board being evaluated.
+     * @return Whether a winner is found horizontally.
+     */
     private boolean checkHorizontal(Board board) {
         for (int i = 0; i < board.getNoCols() - 3; i++) {
-            for (int j = 0; j < board.getNoRows(); j++) {
+            for (int j = board.getNoRows() - 1; j >= 0; j--) {   //Start at bottom of board to make finding a winner quicker
                 if (board.getLocationState(new Location(i, j)) == currentPlayer.getPlayerState()
                         && board.getLocationState(new Location(i + 1, j)) == currentPlayer.getPlayerState()
                         && board.getLocationState(new Location(i + 2, j)) == currentPlayer.getPlayerState()
@@ -68,6 +73,12 @@ public class Connect4 {
         return false;
     }
 
+    /**
+     * Method to check whether the board has a winner vertically.
+     *
+     * @param board The board that is being checked.
+     * @return  Whether a winner has been found vertically.
+     */
     private boolean checkVertical(Board board) {
         for (int i = 0; i < board.getNoCols(); i++) {
             for (int j = board.getNoRows() - 1; j >= 3; j--) {
@@ -81,6 +92,13 @@ public class Connect4 {
         return false;
     }
 
+    /**
+     * Method that checks for a winner diagonally on the board going back '\'.
+     *
+     * @param board The board being checked.
+     *
+     * @return Boolean for whether a winner has been found.
+     */
     private boolean checkDiagBack(Board board) {
         for (int i = 0; i < board.getNoCols() - 3; i++) {
             for (int j = board.getNoRows() - 4; j >= 0; j--) {
@@ -94,6 +112,12 @@ public class Connect4 {
         return false;
     }
 
+    /**
+     * Method that checks for a winner diagonally forward.
+     *
+     * @param board The board being checked.
+     * @return Whether a winner has been found or not.
+     */
     private boolean checkDiagFor(Board board) {
         for (int i =  board.getNoCols() - 1; i >= 3; i--) {
             for (int j = board.getNoRows() - 4; j >= 0; j--) {
@@ -109,16 +133,17 @@ public class Connect4 {
 
     /**
 	 * Checks for a draw
-	 * @return
+     *
+	 * @return Whethter the board is in a draw state.
 	 */
 	public boolean isDraw() {
 		return numTurns == board.getNoCols() * board.getNoRows();
 	}
 
 	/**
-	 * Method called to get next move from player
+	 * Method called to get next move from player.
 	 * 
-	 * @return boolean indicating move take successfully
+	 * @return boolean indicating move take successfully.
 	 */
 	public boolean takeTurn() {
 		int col = currentPlayer.getMove(board);
@@ -134,6 +159,11 @@ public class Connect4 {
 		return false;
 	}
 
+    /**
+     * Method that returns the current game board of Connect 4.
+     *
+     * @return The current Connect 4 game board.
+     */
 	public Board getBoard() {
 		return board;
 	}
@@ -144,11 +174,17 @@ public class Connect4 {
 	public static void main(String[] args) throws InterruptedException {
         Board board = new Board(7, 6);
         IPlayer player1, player2;
-        player1 = player2 = null;
+        player1 = player2 = null; //Initialise to null first, user decides what type of game to start.
         Connect4 connect4 = new Connect4(player1, player2, board);
         connect4.run();
 	}
 
+    /**
+     * Method responsible for handling the running of the game
+     * after being initialised in the main method.
+     *
+     * @throws InterruptedException
+     */
     private void run() throws InterruptedException {
         int option = setUpMenu();
         createGame(option);
@@ -160,7 +196,9 @@ public class Connect4 {
             printGrid();
             while(true) {
                 if (takeTurn()) {
-                    if (currentPlayer instanceof ComputerPlayer20057028) Thread.sleep(1000);
+                    if (currentPlayer instanceof ComputerPlayer20057028
+                            || currentPlayer instanceof RandomPlayer)
+                        Thread.sleep(1000);
                     break;
                 }
             }
@@ -178,6 +216,9 @@ public class Connect4 {
 
     }
 
+    /**
+     * Method that prints the current grid to the screen.
+     */
     private void printGrid() {
         StdOut.println();
         for (int i = 0; i < board.getNoRows(); i++) {
@@ -194,9 +235,7 @@ public class Connect4 {
 
                 if (j == board.getNoCols() - 1)StdOut.print("|");
             }
-
-           // StdOut.print(" |");
-           StdOut.println();
+            StdOut.println();
         }
         for(int i = 0; i < board.getNoCols(); i ++) {
             if (i == 0) StdOut.print("   [" + i + "]");
@@ -205,6 +244,12 @@ public class Connect4 {
         StdOut.println();
     }
 
+    /**
+     * Method that sets the players of the game based on the
+     * User's choice of type of game.
+     *
+     * @param choice Users choice of game.
+     */
     private void createGame(int choice) {
         switch (choice) {
             case 1:
@@ -233,7 +278,13 @@ public class Connect4 {
         }
     }
 
-    private static int setUpMenu() {
+    /**
+     * Method used to display a menu for the user and a method that returns
+     * their choice.
+     *
+     * @return Users choice.
+     */
+    private int setUpMenu() {
         StdOut.println(" _____________________________________ ");
         StdOut.println("|                                     | ");
         StdOut.println("|             CONNECT 4               | ");
@@ -255,10 +306,14 @@ public class Connect4 {
         return choice;
     }
 
-
-
-
-    private static int getInt(String prompt) throws InputMismatchException {
+    /***
+     * Method that gets a number from a user.
+     *
+     * @param prompt Message to user.
+     * @return User's choice.
+     * @throws InputMismatchException
+     */
+    private int getInt(String prompt) throws InputMismatchException {
         StdOut.println(prompt);
         try {
             int output = StdIn.readInt();
@@ -270,7 +325,5 @@ public class Connect4 {
         }
         return -1;
     }
-
-
 }
 

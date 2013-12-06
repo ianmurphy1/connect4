@@ -15,9 +15,9 @@ public class ComputerPlayer20057028 extends IPlayer {
     private IPlayer pmax, pmin;  //pmax = this player, pmin is the player the ai is playing against.
     private Board gameBoard;
     private int bestColumn, bestColumnScore;
-
+    private boolean isWin;
     private final int DEPTH = 5; //Set higher to allow for deeper scans and harder AI
-    private final int DIFFICULTY = 10000; //Multiplier for scores to increase difficulty
+    private final int DIFFICULTY = 4000; //Multiplier for scores to increase difficulty
 
 	public ComputerPlayer20057028(LocationState playerState) {
 		super(playerState);
@@ -61,20 +61,26 @@ public class ComputerPlayer20057028 extends IPlayer {
         ArrayList<Location> moves = getLegalMoves(gameBoard); // Get locations of legal moves
         bestColumnScore = -Integer.MAX_VALUE; //Set the best column to track which move is best
         for (Location move: moves) {
+         //   System.out.println("Placing move at: (" + move.getX() + ", " + move.getY() + ").");
             gameBoard.setLocationState(move, pmax.getPlayerState());
+           // System.out.println("This moves score is: " );
             //call to the recursive negamax algorithm
-            int score = negamax(gameBoard, DEPTH, -Integer.MAX_VALUE, Integer.MAX_VALUE, 1, pmax);
-            if (score >= bestColumnScore) {  //If score form negamax is better than the current column score
-                bestColumnScore = score;    //change the best column score
-                bestColumn = move.getX();
-            }
+            negamax(gameBoard, DEPTH, -Integer.MAX_VALUE, Integer.MAX_VALUE, 1, pmax);
+           // System.out.println("This moves score is: " + score);
+          //  if (score >= bestColumnScore) {  //If score form negamax is better than the current column score
+           //     bestColumnScore = score;    //change the best column score
+           //     bestColumn = move.getX();
+            //}
             gameBoard.setLocationState(move, LocationState.EMPTY);
         }
+        //System.out.println("Taking move at: " + bestColumn);
         int choice = bestColumn;
         return choice;
 	}
 
     /**
+     *
+     *
      *
      * @param b
      * @param depth
@@ -85,9 +91,9 @@ public class ComputerPlayer20057028 extends IPlayer {
      * @return
      */
     private int negamax(Board b, int depth, int alpha, int beta, int sign, IPlayer player) {
-
-        if (isWin(b, player)) return sign * -Integer.MAX_VALUE; //If move results in win, return biggest value possible
-        if (isDraw(b) || depth == 0) {
+        isWin = false;
+        //if (isWin(b, player)) return 2147483600; //If move results in win, return biggest value possible
+        if (isTerminal(b, player) || depth == 0) {
             return sign * eval(b, player);
         }
         IPlayer opp;
@@ -100,15 +106,20 @@ public class ComputerPlayer20057028 extends IPlayer {
             b.setLocationState(move, LocationState.EMPTY);
             if (x > max) {
                 max = x;
-              //  if (x > bestColumnScore) {  //If score form negamax is better than the current column score
-              //      bestColumnScore = x;    //change the best column score
-              //      bestColumn = move.getX();
-                //}
+                if (x >= bestColumnScore) {  //If score form negamax is better than the current column score
+                    bestColumnScore = x;    //change the best column score
+                    bestColumn = move.getX();
+                }
             }
             if (x > alpha) alpha = x;
             if (alpha >= beta) return alpha;
         }
         return max;
+    }
+
+    private boolean isTerminal(Board b, IPlayer player) {
+        if (isDraw(b) || isWin(b, player)) return true;
+        return false;
     }
 
     /**
@@ -124,8 +135,10 @@ public class ComputerPlayer20057028 extends IPlayer {
                 if (b.getLocationState(new Location(i, j)) == p.getPlayerState()
                         && b.getLocationState(new Location(i + 1, j)) == p.getPlayerState()
                         && b.getLocationState(new Location(i + 2, j)) == p.getPlayerState()
-                        && b.getLocationState(new Location(i + 3, j)) == p.getPlayerState())
+                        && b.getLocationState(new Location(i + 3, j)) == p.getPlayerState()) {
+                    isWin = true;
                     return true;
+                }
             }
         }
 
@@ -134,8 +147,10 @@ public class ComputerPlayer20057028 extends IPlayer {
                 if (b.getLocationState(new Location(i, j)) == p.getPlayerState()
                         && b.getLocationState(new Location(i, j - 1)) == p.getPlayerState()
                         && b.getLocationState(new Location(i, j - 2)) == p.getPlayerState()
-                        && b.getLocationState(new Location(i, j - 3)) == p.getPlayerState())
+                        && b.getLocationState(new Location(i, j - 3)) == p.getPlayerState()) {
+                    isWin = true;
                     return true;
+                }
             }
         }
 
@@ -144,8 +159,10 @@ public class ComputerPlayer20057028 extends IPlayer {
                 if (b.getLocationState(new Location(i, j)) == p.getPlayerState()
                         && b.getLocationState(new Location(i + 1, j + 1)) == p.getPlayerState()
                         && b.getLocationState(new Location(i + 2, j + 2)) == p.getPlayerState()
-                        && b.getLocationState(new Location(i + 3, j + 3)) == p.getPlayerState())
+                        && b.getLocationState(new Location(i + 3, j + 3)) == p.getPlayerState()) {
+                    isWin = true;
                     return true;
+                }
             }
         }
 
@@ -154,8 +171,10 @@ public class ComputerPlayer20057028 extends IPlayer {
                 if (b.getLocationState(new Location(i, j)) == p.getPlayerState()
                         && b.getLocationState(new Location(i - 1, j + 1)) == p.getPlayerState()
                         && b.getLocationState(new Location(i - 2, j + 2)) == p.getPlayerState()
-                        && b.getLocationState(new Location(i - 3, j + 3)) == p.getPlayerState())
+                        && b.getLocationState(new Location(i - 3, j + 3)) == p.getPlayerState()) {
+                    isWin = true;
                     return true;
+                }
             }
         }
         return false;
@@ -193,7 +212,58 @@ public class ComputerPlayer20057028 extends IPlayer {
         //Multipliers based on whether possible rows are vertical, horizontal or diagonal
         int v = 5, d = 10, h = 15;
         //Scores for tokens in a row
-        int oneInRow = 100, twoInRow = 500, threeInRow = 5000;
+        int oneInRow = 50, twoInRow = 500, threeInRow = 1500, winner = 5000;
+
+
+        /******************************************************************************
+         *                                                                            *
+         *                             CHECK WINNER                                   *
+         *                                                                            *
+         ******************************************************************************/
+        if (isWin) {
+        //Horizontal Win
+        for (int i = 0; i < b.getNoCols() - 3; i++) {
+            for (int j = b.getNoRows() - 1; j >= 0; j--) {
+                if (b.getLocationState(new Location(i, j)) == p.getPlayerState()
+                        && b.getLocationState(new Location(i + 1, j)) == p.getPlayerState()
+                        && b.getLocationState(new Location(i + 2, j)) == p.getPlayerState()
+                        && b.getLocationState(new Location(i + 3, j)) == p.getPlayerState())
+                    score += winner;
+            }
+        }
+
+        //Vertical win
+        for (int i = 0; i < b.getNoCols(); i++) {
+            for (int j = b.getNoRows() - 1; j >= 3; j--) {
+                if (b.getLocationState(new Location(i, j)) == p.getPlayerState()
+                        && b.getLocationState(new Location(i, j - 1)) == p.getPlayerState()
+                        && b.getLocationState(new Location(i, j - 2)) == p.getPlayerState()
+                        && b.getLocationState(new Location(i, j - 3)) == p.getPlayerState())
+                    score += winner;
+            }
+        }
+
+        //Diagonal Win
+        for (int i = 0; i < b.getNoCols() - 3; i++) {
+            for (int j = b.getNoRows() - 4; j >= 0; j--) {
+                if (b.getLocationState(new Location(i, j)) == p.getPlayerState()
+                        && b.getLocationState(new Location(i + 1, j + 1)) == p.getPlayerState()
+                        && b.getLocationState(new Location(i + 2, j + 2)) == p.getPlayerState()
+                        && b.getLocationState(new Location(i + 3, j + 3)) == p.getPlayerState())
+                    score += winner;
+            }
+        }
+
+        //Diagonal Win
+        for (int i =  b.getNoCols() - 1; i >= 3; i--) {
+            for (int j = b.getNoRows() - 4; j >= 0; j--) {
+                if (b.getLocationState(new Location(i, j)) == p.getPlayerState()
+                        && b.getLocationState(new Location(i - 1, j + 1)) == p.getPlayerState()
+                        && b.getLocationState(new Location(i - 2, j + 2)) == p.getPlayerState()
+                        && b.getLocationState(new Location(i - 3, j + 3)) == p.getPlayerState())
+                    score += winner;
+            }
+        } }
 
         /******************************************************************************
          *                                                                            *
