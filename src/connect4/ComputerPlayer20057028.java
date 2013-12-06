@@ -96,6 +96,16 @@ public class ComputerPlayer20057028 extends IPlayer {
 
         boolean moreThanOne = false; // Used to check if more than one move is the same score
         if (isWin(b, player)) return sign * -Integer.MAX_VALUE; // Return highest possible value for a win.
+
+        /**
+         * Changing this also brought changes to how the AI behaved
+         * if (isWin(b, player)) return -Integer.MAX_VALUE;
+         * if (isWin(b, player)) return sign * Integer.MAX_VALUE;
+         * if (isWin(b, player)) return Integer.MAX_VALUE;
+         * They all seemed to affect it differently but not enough to be positive about
+         * which one would be the best to choose.
+        */
+
         if (isDraw(b) || depth == 0) {          // If the board is a draw or the depth
             return sign * eval(b, player);      // the heuristic of the board.
         }
