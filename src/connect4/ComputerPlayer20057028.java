@@ -1,8 +1,6 @@
 package connect4;
 
 import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
 import java.util.Random;
 
 /**
@@ -17,19 +15,20 @@ public class ComputerPlayer20057028 extends IPlayer {
 
     private IPlayer pmax, pmin;  //pmax = this player, pmin is the player the ai is playing against.
     private Board gameBoard;
-    private int bestColumn, bestColumnScore;
-    private boolean isWin;
-    private final int DEPTH = 5; //Set higher to allow for deeper scans and harder AI
-    private final int DIFFICULTY = 4000; //Multiplier for scores to increase difficulty
+    private double bestColumnScore;
+    private int bestColumn;
+    private final int DEPTH = 7; //Set higher to allow for deeper scans and harder AI
+    private final int DIFFICULTY = 40; //Multiplier for scores to increase difficulty
 
 	public ComputerPlayer20057028(LocationState playerState) {
 		super(playerState);
 	}
 
     /**
+     * Method that creates a copy of a board.
      *
-     * @param board
-     * @return
+     * @param board Board at the current state.
+     * @return Copy of the board.
      */
     private Board copyBoard(Board board) {
         Board b = new Board(board.getNoCols(), board.getNoRows());
@@ -41,12 +40,17 @@ public class ComputerPlayer20057028 extends IPlayer {
         return b;
     }
 
+    /**
+     * Method that returns the move that the AI wants to play.
+     * Starting point of negamax.
+     *
+     * @param board - Connect 4 board as type connect4.connect4.Board
+     * @return The column to be played.
+     */
     @Override
 	public int getMove(Board board) {
         this.gameBoard = copyBoard(board);
         createGame();
-        ArrayList<Location> dups = new ArrayList<Location>();
-        boolean moreThanOne = false;
         // If column 3 is empty place a piece there
         if (gameBoard.getLocationState(new Location(3, gameBoard.getNoRows() - 1)) == LocationState.EMPTY)
             return 3;
@@ -61,83 +65,71 @@ public class ComputerPlayer20057028 extends IPlayer {
                 && gameBoard.getLocationState(new Location(4, gameBoard.getNoRows() - 1)) == LocationState.EMPTY)
             return 4;
 
-
         ArrayList<Location> moves = getLegalMoves(gameBoard); // Get locations of legal moves
         bestColumnScore = -Integer.MAX_VALUE; //Set the best column to track which move is best
         for (Location move: moves) {
-            //System.out.println("Placing move at: (" + move.getX() + ", " + move.getY() + ").");
             gameBoard.setLocationState(move, pmax.getPlayerState());
-            //call to the recursive negamax algorithm
-            negamax(gameBoard, DEPTH, -Integer.MAX_VALUE, Integer.MAX_VALUE, 1, pmax);
-            //int score = negamax(gameBoard, DEPTH, -Integer.MAX_VALUE, Integer.MAX_VALUE, 1, pmax);
-            //System.out.println("This moves score is: " + score);
-           // if (score == bestColumnScore) {
-           //     dups.add(move);
-           //     moreThanOne = true;
-           // }
-
-            //if (score > bestColumnScore) {  //If score form negamax is better than the current column score
-           //     bestColumnScore = score;    //change the best column score
-            //    bestColumn = move.getX();
-           // }
+            negamax(gameBoard, DEPTH, Double.NEGATIVE_INFINITY, Double.POSITIVE_INFINITY, 1, pmax);
             gameBoard.setLocationState(move, LocationState.EMPTY);
         }
-        //if (moreThanOne) {
-            //Random rand = new Random();
-           // Collections.shuffle(dups);
-           // bestColumn = dups.get(rand.nextInt(dups.size())).getX();
-       // }
-        //System.out.println("Taking move at: " + bestColumn);
-        //if (moreThanOne) System.out.println("From Random Choice.");
         int choice = bestColumn;
         return choice;
 	}
 
     /**
+     * This method implements the negamax algorithm, receiving a board with a new move after being made
+     * it then makes the next set of moves on it, it does this until the board has reached a terminal
+     * or the depth has reached 0. It then starts returning the best score for a particular move.  For
+     * class the deciding of the best move is done in side the main negamax method. Once the highest score
+     * is found the move responsible is recorded.
      *
-     *
-     *
-     * @param b
-     * @param depth
-     * @param alpha
-     * @param beta
-     * @param sign
-     * @param player
-     * @return
+     * @param b The board where the moves are being made.
+     * @param depth The depth that the negamax is to extend to.
+     * @param alpha Parameter used in pruning, initially -Infinity.
+     * @param beta Parameter used in cut off methods, initially +Infinity.
+     * @param sign The sign so that there should be no negative numbers returned.
+     * @param player The player who is the turns opponent, which switches on every call
+     *               down the tree.
+     * @return The max score of a move made on the board.
      */
-    private int negamax(Board b, int depth, int alpha, int beta, int sign, IPlayer player) {
-        isWin = false;
-        //if (isWin(b, player)) return 2147483600; //If move results in win, return biggest value possible
-        if (isTerminal(b, player) || depth == 0) {
-            return sign * eval(b, player);
+    private double negamax(Board b, int depth, double alpha, double beta, int sign, IPlayer player) {
+
+        boolean moreThanOne = false; // Used to check if more than one move is the same score
+        if (isWin(b, player)) return sign * -Integer.MAX_VALUE; // Return highest possible value for a win.
+        if (isDraw(b) || depth == 0) {          // If the board is a draw or the depth
+            return sign * eval(b, player);      // the heuristic of the board.
         }
-        IPlayer opp;
+        IPlayer opp; //Player to represent the opponent in each call to negamax
         opp = (pmax.getPlayerState() == player.getPlayerState()) ? pmin : pmax;
-        int max = -Integer.MAX_VALUE;
-        ArrayList<Location> moves = getLegalMoves(b);
+        double max = Double.NEGATIVE_INFINITY; // Set max to as low as possible
+
+        ArrayList<Location> moves = getLegalMoves(b); // Get the legal moves for the board at this state
+        ArrayList<Location> dupes = new ArrayList<Location>(); //Holding area for moves with the same score
         for (Location move : moves) {
-            b.setLocationState(move, player.getPlayerState());
-           // System.out.println("Placing move at: (" + move.getX() + ", " + move.getY() + ").");
-            int x = -negamax(b, depth - 1, -beta, -alpha, -sign, opp);
-            b.setLocationState(move, LocationState.EMPTY);
+            b.setLocationState(move, player.getPlayerState());  //Make the move
+            double x = -negamax(b, depth - 1, beta * -1, alpha * -1, sign * -1, opp);  //Recursive call that returns the max score for each move
+            b.setLocationState(move, LocationState.EMPTY); //Undo the move
             if (x > max) {
                 max = x;
-                if (x > bestColumnScore) {  //If score form negamax is better than the current column score
+                if (x >= bestColumnScore) {  //If score form negamax is better than the current column score
                     bestColumnScore = x;    //change the best column score
-                    bestColumn = move.getX();
-                   // System.out.println("This moves score is: " + bestColumnScore);
-                //    System.out.println("Placing move at: (" + move.getX() + ").");
+                    bestColumn = move.getX(); //Take this move as the best
+                    if (Double.compare(bestColumnScore, x) == 0) {
+                        moreThanOne = true;
+                        dupes.add(move);
+                    }
                 }
+
+            }
+            if (moreThanOne) { //If there's more than one move with the same score, pick it at random.
+                Random rand = new Random();
+                bestColumn = dupes.get(rand.nextInt(dupes.size())).getX();
+                moreThanOne = false;
             }
             if (x > alpha) alpha = x;
             if (alpha >= beta) return alpha;
         }
         return max;
-    }
-
-    private boolean isTerminal(Board b, IPlayer player) {
-        if (isDraw(b) || isWin(b, player)) return true;
-        return false;
     }
 
     /**
@@ -154,7 +146,7 @@ public class ComputerPlayer20057028 extends IPlayer {
                         && b.getLocationState(new Location(i + 1, j)) == p.getPlayerState()
                         && b.getLocationState(new Location(i + 2, j)) == p.getPlayerState()
                         && b.getLocationState(new Location(i + 3, j)) == p.getPlayerState()) {
-                    isWin = true;
+                    //isWin = true;
                     return true;
                 }
             }
@@ -166,7 +158,7 @@ public class ComputerPlayer20057028 extends IPlayer {
                         && b.getLocationState(new Location(i, j - 1)) == p.getPlayerState()
                         && b.getLocationState(new Location(i, j - 2)) == p.getPlayerState()
                         && b.getLocationState(new Location(i, j - 3)) == p.getPlayerState()) {
-                    isWin = true;
+                   // isWin = true;
                     return true;
                 }
             }
@@ -177,10 +169,9 @@ public class ComputerPlayer20057028 extends IPlayer {
                 if (b.getLocationState(new Location(i, j)) == p.getPlayerState()
                         && b.getLocationState(new Location(i + 1, j + 1)) == p.getPlayerState()
                         && b.getLocationState(new Location(i + 2, j + 2)) == p.getPlayerState()
-                        && b.getLocationState(new Location(i + 3, j + 3)) == p.getPlayerState()) {
-                    isWin = true;
+                        && b.getLocationState(new Location(i + 3, j + 3)) == p.getPlayerState())
                     return true;
-                }
+
             }
         }
 
@@ -189,28 +180,45 @@ public class ComputerPlayer20057028 extends IPlayer {
                 if (b.getLocationState(new Location(i, j)) == p.getPlayerState()
                         && b.getLocationState(new Location(i - 1, j + 1)) == p.getPlayerState()
                         && b.getLocationState(new Location(i - 2, j + 2)) == p.getPlayerState()
-                        && b.getLocationState(new Location(i - 3, j + 3)) == p.getPlayerState()) {
-                    isWin = true;
+                        && b.getLocationState(new Location(i - 3, j + 3)) == p.getPlayerState())
                     return true;
-                }
             }
         }
         return false;
     }
 
+    /**
+     * Method that states whether or not a board is in a draw state.
+     * @param b The board at it's current state.
+     * @return Whether the board is at a draw state.
+     */
     private boolean isDraw(Board b) {
-        for (int i = 0; i < b.getNoCols(); i++) {
+        for (int i = 0; i < b.getNoCols(); i++)
             if (b.getLocationState(new Location(i, 0)) == LocationState.EMPTY) return false;
-        }
+
         return true;
     }
 
+    /**
+     * Method that goes through a column that has been passed in and returns the
+     * 1st available row that is a legal move.
+     *
+     * @param col Column to perform.
+     * @param b The board at a particular state.
+     * @return The row where a legal move can occur.
+     */
     private int getRow(int col, Board b) {
         for (int i = b.getNoRows() - 1; i >= 0; i--)
             if (b.getLocationState(new Location(col, i)) == LocationState.EMPTY) return i;
         return -1;
     }
 
+    /**
+     * Method that scans the board and returns the locations of legal moves.
+     *
+     * @param b The board at the current state.
+     * @return List of Locations of legal moves.
+     */
     private ArrayList<Location> getLegalMoves(Board b) {
         ArrayList<Location> list = new ArrayList<Location>();
         for (int i = 0; i < b.getNoCols(); i++) {
@@ -218,72 +226,28 @@ public class ComputerPlayer20057028 extends IPlayer {
             if (row >= 0) {
                 Location l = new Location(i, row);
                 list.add(l);
-                //System.out.println("Legal Move " + list.size() + " is at: " + l.getX() + ", " + l.getY());
             }
         }
         return list;
     }
 
+    /**
+     * Method that calculates the current state of the board.
+     * Messing around with the mulipliers in this seemed to
+     * have worked in making the AI stronger/weaker to a certain point.
+     * Wasn't enough time to fine tune exactly.
+     *
+     * @param b The board at a state within the negamax algorithm.
+     * @param p The current player.
+     * @return A score for the boards value.
+     */
     public int eval(Board b, IPlayer p) {
 
         int score = 0;
         //Multipliers based on whether possible rows are vertical, horizontal or diagonal
-        int v, d, h;
-        v = d = 5;
-        h = 8;
+        int v = 10, h = 15, d = 5;
         //Scores for tokens in a row
-        int oneInRow = 50, twoInRow = 200, threeInRow = 700, winner = 70000000;
-
-
-        /******************************************************************************
-         *                                                                            *
-         *                             CHECK WINNER                                   *
-         *                                                                            *
-         ******************************************************************************/
-        if (isWin) {
-        //Horizontal Win
-        for (int i = 0; i < b.getNoCols() - 3; i++) {
-            for (int j = b.getNoRows() - 1; j >= 0; j--) {
-                if (b.getLocationState(new Location(i, j)) == p.getPlayerState()
-                        && b.getLocationState(new Location(i + 1, j)) == p.getPlayerState()
-                        && b.getLocationState(new Location(i + 2, j)) == p.getPlayerState()
-                        && b.getLocationState(new Location(i + 3, j)) == p.getPlayerState())
-                    score += winner;
-            }
-        }
-
-        //Vertical win
-        for (int i = 0; i < b.getNoCols(); i++) {
-            for (int j = b.getNoRows() - 1; j >= 3; j--) {
-                if (b.getLocationState(new Location(i, j)) == p.getPlayerState()
-                        && b.getLocationState(new Location(i, j - 1)) == p.getPlayerState()
-                        && b.getLocationState(new Location(i, j - 2)) == p.getPlayerState()
-                        && b.getLocationState(new Location(i, j - 3)) == p.getPlayerState())
-                    score += winner;
-            }
-        }
-
-        //Diagonal Win
-        for (int i = 0; i < b.getNoCols() - 3; i++) {
-            for (int j = b.getNoRows() - 4; j >= 0; j--) {
-                if (b.getLocationState(new Location(i, j)) == p.getPlayerState()
-                        && b.getLocationState(new Location(i + 1, j + 1)) == p.getPlayerState()
-                        && b.getLocationState(new Location(i + 2, j + 2)) == p.getPlayerState()
-                        && b.getLocationState(new Location(i + 3, j + 3)) == p.getPlayerState())
-                    score += winner;
-            }
-        }
-
-        //Diagonal Win
-        for (int i =  b.getNoCols() - 1; i >= 3; i--) {
-            for (int j = b.getNoRows() - 4; j >= 0; j--) {
-                if (b.getLocationState(new Location(i, j)) == p.getPlayerState()
-                        && b.getLocationState(new Location(i - 1, j + 1)) == p.getPlayerState()
-                        && b.getLocationState(new Location(i - 2, j + 2)) == p.getPlayerState()
-                        && b.getLocationState(new Location(i - 3, j + 3)) == p.getPlayerState())
-                    score += winner * d;
-            }
-        } }
+        int oneInRow = 2, twoInRow = 50, threeInRow = 150;
 
         /******************************************************************************
          *                                                                            *
@@ -675,12 +639,20 @@ public class ComputerPlayer20057028 extends IPlayer {
         return score * DIFFICULTY;
     }
 
+    /**
+     * Method that creates two players that are used throughout the players move.
+     */
     private void createGame() {
         pmax = this;
         LocationState ls = (this.getPlayerState() == LocationState.RED) ? LocationState.YELLOW : LocationState.RED;
         pmin = new ComputerPlayer20057028(ls);
     }
 
+    /**
+     * Method that returns the current players Difficulty. For use in tests.
+     *
+     * @return Difficulty of the game multiplier.
+     */
     public int getDIFFICULTY() {
         return DIFFICULTY;
     }

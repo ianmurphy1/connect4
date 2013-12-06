@@ -172,54 +172,11 @@ public class Connect4 {
 	 * @param args
 	 */
 	public static void main(String[] args) throws InterruptedException {
-        int baseAiWins = 0;
-        double baseAiTime = 0;
-        int copyAiWins = 0;
-        double copyAiTime = 0;
-        Stopwatch s = new Stopwatch();
-        for (int i = 0; i < 100; i++) {
-//            IPlayer player1 = new HumanPlayer(LocationState.YELLOW);
-            IPlayer player1 = new ComputerPlayer20057028(LocationState.YELLOW);
-            IPlayer player2 = new ComputerPlayer20057028COPY(LocationState.RED);
-            Board board = new Board(7, 6);
-            Connect4 connect4 = new Connect4(player1, player2, board);
-            int turn = 0;
-            while (true) {
-                Stopwatch stopwatch = new Stopwatch();
-                while (!connect4.takeTurn() && !connect4.isDraw()) {
-                    connect4.takeTurn();
-                    //System.out.print(turn + "_" + ((turn % 10 == 0) ? "\n" : ""));
-                    turn++;
-                }
-                if ((player1 instanceof HumanPlayer || player2 instanceof HumanPlayer)) {
-                    System.out.println(connect4.getBoard().toString());          //////DRAW BOARD
-                }
-
-                if (connect4.isWin(board) || connect4.isDraw()) break;
-
-                if (connect4.currentPlayer.getPlayerState() == LocationState.RED) baseAiTime += stopwatch.elapsedTime();
-                if (connect4.currentPlayer.getPlayerState() == LocationState.YELLOW)
-                    copyAiTime += stopwatch.elapsedTime();
-
-//                System.out.println("Player: " + connect4.currentPlayer.getPlayerState() + " took: " + stopwatch.elapsedTime() + "s");
-                connect4.nextPlayer();
-            }
-//            System.out.println(connect4.getBoard().toString());
-            System.out.print("." + ((i % 100 == 0) ? "\n" : ""));
-            //System.out.println(connect4.currentPlayer.getPlayerState());
-//            System.out.println(connect4.curmrentPlayer.getPlayerState()+"\nred " + newAiWins + " yell " + oldWins);
-            if (connect4.currentPlayer.getPlayerState() == LocationState.RED) copyAiWins++;
-            if (connect4.currentPlayer.getPlayerState() == LocationState.YELLOW) baseAiWins++;
-        }
-        System.out.println("\nBase Wins: " + baseAiWins + "\nCopy Wins: " + copyAiWins  + "\nBase time: " + baseAiTime + "\nCopy time: " + copyAiTime);
-        System.out.println("time: " + s.elapsedTime() + " is it ok? " + (baseAiTime + copyAiTime));
-
-
-
-        //IPlayer player1, player2;
-        //player1 = player2 = null; //Initialise to null first, user decides what type of game to start.
-        //Connect4 connect4 = new Connect4(player1, player2, board);
-        //connect4.run();
+        Board board = new Board(7, 6);
+        IPlayer player1, player2;
+        player1 = player2 = null; //Initialise to null first, user decides what type of game to start.
+        Connect4 connect4 = new Connect4(player1, player2, board);
+        connect4.run();
 	}
 
     /**
@@ -314,6 +271,18 @@ public class Connect4 {
             case 5:
                 this.p1 = new RandomPlayer(LocationState.RED);
                 this.p2 = new ComputerPlayer20057028(LocationState.YELLOW);
+                break;
+            case 6:
+                this.p1 = new ComputerPlayer20057028COPY(LocationState.RED);
+                this.p2 = new HumanPlayer(LocationState.YELLOW);
+                break;
+            case 7:
+                this.p1 = new RandomPlayer(LocationState.RED);
+                this.p2 = new ComputerPlayer20057028COPY(LocationState.YELLOW);
+                break;
+            case 8:
+                this.p1 = new ComputerPlayer20057028(LocationState.RED);
+                this.p2 = new ComputerPlayer20057028COPY(LocationState.YELLOW);
                 break;
             default:
                 setUpMenu();
