@@ -95,7 +95,7 @@ public class ComputerPlayer20057028 extends IPlayer {
     private double negamax(Board b, int depth, double alpha, double beta, int sign, IPlayer player) {
 
         boolean moreThanOne = false; // Used to check if more than one move is the same score
-        if (isWin(b, player)) return sign * -Integer.MAX_VALUE; // Return highest possible value for a win.
+        if (isWin(b, player)) return sign * Integer.MAX_VALUE; // Return highest possible value for a win.
 
         /**
          * Changing this also brought changes to how the AI behaved
