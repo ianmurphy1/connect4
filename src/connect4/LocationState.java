@@ -7,4 +7,16 @@ package connect4;
  */
 public enum LocationState {
 	EMPTY, RED, YELLOW;
+
+    public LocationState getOpponent() {
+
+        if (this==EMPTY)
+            return null;
+
+        if (this==RED)
+            return YELLOW;
+        else
+            return RED;
+
+    }
 }

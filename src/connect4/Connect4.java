@@ -284,6 +284,18 @@ public class Connect4 {
                 this.p1 = new ComputerPlayer20057028(LocationState.RED);
                 this.p2 = new ComputerPlayer20057028COPY(LocationState.YELLOW);
                 break;
+            case 9:
+                this.p1 = new ComputerPlayer20057028(LocationState.RED);
+                this.p2 = new ComputerPlayer20194857(LocationState.YELLOW);
+                break;
+            case 10:
+                this.p1 = new ComputerPlayer20194857(LocationState.RED);
+                this.p2 = new ComputerPlayer20057028(LocationState.YELLOW);
+                break;
+            case 11:
+                this.p1 = new ComputerPlayer20194857(LocationState.RED);
+                this.p2 = new ComputerPlayer20057028COPY(LocationState.YELLOW);
+                break;
             default:
                 setUpMenu();
                 break;
@@ -317,6 +329,66 @@ public class Connect4 {
 
         return choice;
     }
+
+    public static LocationState checkWinner(Board f) {
+        for (int i = 0; i < f.getNoCols(); i++) {
+            for (int j = 0; j < f.getNoRows(); j++) {
+                if ((j <= f.getNoRows() - 4)
+                        && (f.getLocationState(new Location(i, j)) != LocationState.EMPTY)
+                        && (f.getLocationState(new Location(i, j)) == f
+                        .getLocationState(new Location(i, j + 1)))
+                        && (f.getLocationState(new Location(i, j + 1)) == f
+                        .getLocationState(new Location(i, j + 2)))
+                        && (f.getLocationState(new Location(i, j + 2)) == f
+                        .getLocationState(new Location(i, j + 3))))
+                    return f.getLocationState(new Location(i, j));
+
+                if ((i <= f.getNoCols() - 4)
+                        && (f.getLocationState(new Location(i, j)) != LocationState.EMPTY)
+                        && (f.getLocationState(new Location(i, j)) == f
+                        .getLocationState(new Location(i + 1, j)))
+                        && (f.getLocationState(new Location(i + 1, j)) == f
+                        .getLocationState(new Location(i + 2, j)))
+                        && (f.getLocationState(new Location(i + 2, j)) == f
+                        .getLocationState(new Location(i + 3, j))))
+                    return f.getLocationState(new Location(i, j));
+
+            }
+        }
+
+        for (int i = 0; i < f.getNoCols() - 3; i++) {
+            for (int j = 0; j < f.getNoRows() - 3; j++) {
+                if ((f.getLocationState(new Location(i, j)) != LocationState.EMPTY)
+                        && ((f.getLocationState(new Location(i, j)) == f
+                        .getLocationState(new Location(i + 1, j + 1)))
+                        && (f.getLocationState(new Location(i + 1,
+                        j + 1)) == f
+                        .getLocationState(new Location(i + 2,
+                                j + 2))) && (f
+                        .getLocationState(new Location(i + 2, j + 2)) == f
+                        .getLocationState(new Location(i + 3, j + 3)))))
+                    return f.getLocationState(new Location(i, j));
+            }
+        }
+
+        for (int i = 0; i < f.getNoCols() - 3; i++) {
+            for (int j = f.getNoRows() - 1; j > 2; j--) {
+                if ((f.getLocationState(new Location(i, j)) != LocationState.EMPTY)
+                        && ((f.getLocationState(new Location(i, j)) == f
+                        .getLocationState(new Location(i + 1, j - 1)))
+                        && (f.getLocationState(new Location(i + 1,
+                        j - 1)) == f
+                        .getLocationState(new Location(i + 2,
+                                j - 2))) && (f
+                        .getLocationState(new Location(i + 2, j - 2)) == f
+                        .getLocationState(new Location(i + 3, j - 3)))))
+                    return f.getLocationState(new Location(i, j));
+            }
+        }
+
+        return null;
+    }
+
 
     /***
      * Method that gets a number from a user.

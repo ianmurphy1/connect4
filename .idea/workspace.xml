@@ -3,6 +3,10 @@
   <component name="ChangeListManager">
     <list default="true" id="1aa1172e-7f44-4ca1-a357-aa75a53792a6" name="Default" comment="">
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/connect4/ComputerPlayer20057028.java" afterPath="$PROJECT_DIR$/src/connect4/ComputerPlayer20057028.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/connect4/ComputerPlayer20057028COPY.java" afterPath="$PROJECT_DIR$/src/connect4/ComputerPlayer20057028COPY.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/connect4/Connect4.java" afterPath="$PROJECT_DIR$/src/connect4/Connect4.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/connect4/LocationState.java" afterPath="$PROJECT_DIR$/src/connect4/LocationState.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
     </list>
     <ignored path="C4.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -76,19 +80,37 @@
   </component>
   <component name="FileEditorManager">
     <leaf>
-      <file leaf-file-name="ComputerPlayer20057028.java" pinned="false" current="true" current-in-tab="true">
+      <file leaf-file-name="ComputerPlayer20057028.java" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/connect4/ComputerPlayer20057028.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="97" column="61" selection-start="4328" selection-end="4328" vertical-scroll-proportion="0.15522388" vertical-offset="1580" max-vertical-offset="11356">
+            <state line="61" column="8" selection-start="2109" selection-end="2347" vertical-scroll-proportion="0.0" vertical-offset="826" max-vertical-offset="11407">
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="ComputerPlayer20057028COPY.java" pinned="false" current="false" current-in-tab="false">
+      <file leaf-file-name="ComputerPlayer20194857.java" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/connect4/ComputerPlayer20194857.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="40" column="30" selection-start="993" selection-end="993" vertical-scroll-proportion="0.0" vertical-offset="510" max-vertical-offset="5032">
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="LocationState.java" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/connect4/LocationState.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="20" column="5" selection-start="358" selection-end="358" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="476">
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="ComputerPlayer20057028COPY.java" pinned="false" current="true" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/connect4/ComputerPlayer20057028COPY.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="57" column="21" selection-start="2299" selection-end="2299" vertical-scroll-proportion="0.0" vertical-offset="879" max-vertical-offset="10744">
+            <state line="56" column="21" selection-start="2186" selection-end="2186" vertical-scroll-proportion="0.1954023" vertical-offset="867" max-vertical-offset="10795">
               <folding />
             </state>
           </provider>
@@ -97,8 +119,12 @@
       <file leaf-file-name="Connect4.java" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/connect4/Connect4.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="244" column="36" selection-start="8357" selection-end="8357" vertical-scroll-proportion="0.0" vertical-offset="2635" max-vertical-offset="5797">
-              <folding />
+            <state line="297" column="22" selection-start="10646" selection-end="10646" vertical-scroll-proportion="0.0" vertical-offset="4769" max-vertical-offset="7123">
+              <folding>
+                <element signature="imports" expanded="true" />
+                <element signature="e#5692#5693#0" expanded="true" />
+                <element signature="e#5711#5712#0" expanded="true" />
+              </folding>
             </state>
           </provider>
         </entry>
@@ -135,8 +161,10 @@
         <option value="$PROJECT_DIR$/src/connect4/HumanPlayer.java" />
         <option value="$PROJECT_DIR$/src/connect4/ComputerPlayer20057028Test.java" />
         <option value="$PROJECT_DIR$/src/test/ComputerPlayer20057028Test.java" />
-        <option value="$PROJECT_DIR$/src/connect4/Connect4.java" />
+        <option value="$PROJECT_DIR$/src/connect4/LocationState.java" />
         <option value="$PROJECT_DIR$/src/connect4/ComputerPlayer20057028.java" />
+        <option value="$PROJECT_DIR$/src/connect4/Connect4.java" />
+        <option value="$PROJECT_DIR$/src/connect4/ComputerPlayer20057028COPY.java" />
       </list>
     </option>
   </component>
@@ -177,6 +205,8 @@
       <sortByType />
     </navigator>
     <panes>
+      <pane id="PackagesPane" />
+      <pane id="Scope" />
       <pane id="ProjectPane">
         <subPane>
           <PATH>
@@ -229,8 +259,6 @@
           </PATH>
         </subPane>
       </pane>
-      <pane id="Scope" />
-      <pane id="PackagesPane" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -253,15 +281,16 @@
     <property name="dynamic.classpath" value="false" />
   </component>
   <component name="RecentsManager">
+    <key name="CreateTestDialog.Recents.Supers">
+      <recent name="" />
+    </key>
     <key name="CreateTestDialog.RecentsKey">
       <recent name="connect4" />
       <recent name="test" />
       <recent name="" />
     </key>
-    <key name="CreateTestDialog.Recents.Supers">
-      <recent name="" />
-    </key>
     <key name="CopyFile.RECENT_KEYS">
+      <recent name="C:\C4\src\connect4" />
       <recent name="D:\C4\lib" />
       <recent name="D:\C4\src" />
     </key>
@@ -521,16 +550,19 @@
       <workItem from="1386443921438" duration="70000" />
       <workItem from="1386444020001" duration="238000" />
       <workItem from="1389630112570" duration="74000" />
-      <workItem from="1390839851118" duration="518000" />
+      <workItem from="1390839851118" duration="587000" />
+      <workItem from="1390841548818" duration="565000" />
+      <workItem from="1390908910062" duration="27000" />
+      <workItem from="1391003634781" duration="1000000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="900000" />
+    <option name="totallyTimeSpent" value="2561000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="-8" y="-8" width="1382" height="744" extended-state="6" />
-    <editor active="true" />
+    <editor active="false" />
     <layout>
       <window_info id="Changes" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
       <window_info id="Palette" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
@@ -543,11 +575,11 @@
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32987553" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="12" side_tool="false" content_ui="tabs" />
-      <window_info id="Structure" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.19410875" sideWeight="0.40374786" order="1" side_tool="false" content_ui="tabs" />
+      <window_info id="Structure" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.09063444" sideWeight="0.40374786" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="SLIDING" type="SLIDING" visible="false" weight="0.4" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Application Servers" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.14274925" sideWeight="0.58603066" order="1" side_tool="false" content_ui="combo" />
-      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.39186993" sideWeight="0.5" order="8" side_tool="false" content_ui="tabs" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.06722055" sideWeight="0.58603066" order="1" side_tool="false" content_ui="combo" />
+      <window_info id="Run" active="true" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.39186993" sideWeight="0.5" order="8" side_tool="false" content_ui="tabs" />
       <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="8" side_tool="false" content_ui="tabs" />
       <window_info id="Database" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32954547" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="CDI" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32954547" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
@@ -562,7 +594,7 @@
     </layout>
   </component>
   <component name="Vcs.Log.UiProperties">
-    <option name="RECENTLY_FILTERED_USERS">
+    <option name="RECENTLY_FILTERED_USER_GROUPS">
       <collection />
     </option>
   </component>
@@ -584,6 +616,81 @@
   <component name="editorHistoryManager">
     <entry file="file://$PROJECT_DIR$/src/connect4/ComputerPlayer20057028.java">
       <provider selected="true" editor-type-id="text-editor">
+        <state line="650" column="17" selection-start="32645" selection-end="32645" vertical-scroll-proportion="0.0" vertical-offset="11050" max-vertical-offset="11356">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/connect4/ComputerPlayer20057028COPY.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="57" column="21" selection-start="2299" selection-end="2299" vertical-scroll-proportion="0.0" vertical-offset="969" max-vertical-offset="10795">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/connect4/Connect4.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="335" column="35" selection-start="12035" selection-end="12035" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="5899">
+          <folding>
+            <element signature="imports" expanded="true" />
+            <element signature="e#5692#5693#0" expanded="true" />
+            <element signature="e#5711#5712#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/connect4/ComputerPlayer20057028.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="650" column="17" selection-start="32645" selection-end="32645" vertical-scroll-proportion="0.0" vertical-offset="11050" max-vertical-offset="11356">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/connect4/ComputerPlayer20057028COPY.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="57" column="21" selection-start="2299" selection-end="2299" vertical-scroll-proportion="0.0" vertical-offset="969" max-vertical-offset="10795">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/connect4/Connect4.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="335" column="35" selection-start="12035" selection-end="12035" vertical-scroll-proportion="0.0" vertical-offset="5695" max-vertical-offset="5899">
+          <folding>
+            <element signature="imports" expanded="true" />
+            <element signature="e#5692#5693#0" expanded="true" />
+            <element signature="e#5711#5712#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/connect4/ComputerPlayer20057028.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="97" column="61" selection-start="4328" selection-end="4328" vertical-scroll-proportion="0.0" vertical-offset="1649" max-vertical-offset="11356">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/connect4/ComputerPlayer20057028COPY.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="57" column="21" selection-start="2299" selection-end="2299" vertical-scroll-proportion="0.0" vertical-offset="969" max-vertical-offset="10795">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/connect4/Connect4.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="244" column="36" selection-start="8357" selection-end="8357" vertical-scroll-proportion="0.0" vertical-offset="4148" max-vertical-offset="5899">
+          <folding>
+            <element signature="imports" expanded="true" />
+            <element signature="e#5692#5693#0" expanded="true" />
+            <element signature="e#5711#5712#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/connect4/ComputerPlayer20057028.java">
+      <provider selected="true" editor-type-id="text-editor">
         <state line="143" column="0" selection-start="6669" selection-end="6669" vertical-scroll-proportion="0.0" vertical-offset="2431" max-vertical-offset="11356">
           <folding />
         </state>
@@ -592,7 +699,11 @@
     <entry file="file://$PROJECT_DIR$/src/connect4/Connect4.java">
       <provider selected="true" editor-type-id="text-editor">
         <state line="194" column="67" selection-start="6619" selection-end="6619" vertical-scroll-proportion="0.0" vertical-offset="3298" max-vertical-offset="5899">
-          <folding />
+          <folding>
+            <element signature="imports" expanded="true" />
+            <element signature="e#5692#5693#0" expanded="true" />
+            <element signature="e#5711#5712#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
@@ -606,7 +717,11 @@
     <entry file="file://$PROJECT_DIR$/src/connect4/Connect4.java">
       <provider selected="true" editor-type-id="text-editor">
         <state line="194" column="67" selection-start="6619" selection-end="6619" vertical-scroll-proportion="0.0" vertical-offset="3298" max-vertical-offset="5797">
-          <folding />
+          <folding>
+            <element signature="imports" expanded="true" />
+            <element signature="e#5692#5693#0" expanded="true" />
+            <element signature="e#5711#5712#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
@@ -620,7 +735,11 @@
     <entry file="file://$PROJECT_DIR$/src/connect4/Connect4.java">
       <provider selected="true" editor-type-id="text-editor">
         <state line="166" column="17" selection-start="5681" selection-end="5681" vertical-scroll-proportion="0.0" vertical-offset="2822" max-vertical-offset="5797">
-          <folding />
+          <folding>
+            <element signature="imports" expanded="true" />
+            <element signature="e#5692#5693#0" expanded="true" />
+            <element signature="e#5711#5712#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
@@ -634,7 +753,11 @@
     <entry file="file://$PROJECT_DIR$/src/connect4/Connect4.java">
       <provider selected="true" editor-type-id="text-editor">
         <state line="166" column="17" selection-start="5681" selection-end="5681" vertical-scroll-proportion="0.0" vertical-offset="2822" max-vertical-offset="5797">
-          <folding />
+          <folding>
+            <element signature="imports" expanded="true" />
+            <element signature="e#5692#5693#0" expanded="true" />
+            <element signature="e#5711#5712#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
@@ -646,7 +769,11 @@
     <entry file="file://$PROJECT_DIR$/src/connect4/Connect4.java">
       <provider selected="true" editor-type-id="text-editor">
         <state line="145" column="24" selection-start="5120" selection-end="5120" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="0">
-          <folding />
+          <folding>
+            <element signature="imports" expanded="true" />
+            <element signature="e#5692#5693#0" expanded="true" />
+            <element signature="e#5711#5712#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
@@ -704,33 +831,46 @@
         <state line="2" column="39" selection-start="57" selection-end="57" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="0" />
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/connect4/LocationState.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="0" />
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/test/DiffConnect4Test.java">
       <provider selected="true" editor-type-id="text-editor">
         <state line="22" column="25" selection-start="361" selection-end="361" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="0" />
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/connect4/Connect4.java">
+    <entry file="file://$PROJECT_DIR$/src/connect4/LocationState.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="244" column="36" selection-start="8357" selection-end="8357" vertical-scroll-proportion="0.0" vertical-offset="2635" max-vertical-offset="5797">
+        <state line="20" column="5" selection-start="358" selection-end="358" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="476">
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/connect4/ComputerPlayer20057028COPY.java">
+    <entry file="file://$PROJECT_DIR$/src/connect4/Connect4.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="57" column="21" selection-start="2299" selection-end="2299" vertical-scroll-proportion="0.0" vertical-offset="879" max-vertical-offset="10744">
+        <state line="297" column="22" selection-start="10646" selection-end="10646" vertical-scroll-proportion="0.0" vertical-offset="4769" max-vertical-offset="7123">
+          <folding>
+            <element signature="imports" expanded="true" />
+            <element signature="e#5692#5693#0" expanded="true" />
+            <element signature="e#5711#5712#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/connect4/ComputerPlayer20194857.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="40" column="30" selection-start="993" selection-end="993" vertical-scroll-proportion="0.0" vertical-offset="612" max-vertical-offset="5032">
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/connect4/ComputerPlayer20057028.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="97" column="61" selection-start="4328" selection-end="4328" vertical-scroll-proportion="0.15522388" vertical-offset="1580" max-vertical-offset="11356">
+        <state line="61" column="8" selection-start="2109" selection-end="2347" vertical-scroll-proportion="0.0" vertical-offset="826" max-vertical-offset="11407">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/connect4/ComputerPlayer20057028COPY.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="56" column="21" selection-start="2186" selection-end="2186" vertical-scroll-proportion="0.1954023" vertical-offset="867" max-vertical-offset="10795">
           <folding />
         </state>
       </provider>

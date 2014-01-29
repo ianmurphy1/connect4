@@ -53,6 +53,9 @@ public class ComputerPlayer20057028COPY extends IPlayer {
                 && gameBoard.getLocationState(new Location(2, gameBoard.getNoRows() - 1)) == LocationState.EMPTY)
             return 2;
         else if (gameBoard.getLocationState(new Location(3, gameBoard.getNoRows() - 1)) == pmin.getPlayerState()
+                && gameBoard.getLocationState(new Location(2, gameBoard.getNoRows() - 1)) == pmax.getPlayerState())
+            return 3;
+        else if (gameBoard.getLocationState(new Location(3, gameBoard.getNoRows() - 1)) == pmin.getPlayerState()
                 && gameBoard.getLocationState(new Location(2, gameBoard.getNoRows() - 1)) == pmin.getPlayerState()
                 && gameBoard.getLocationState(new Location(4, gameBoard.getNoRows() - 1)) == LocationState.EMPTY)
             return 4;
@@ -62,7 +65,7 @@ public class ComputerPlayer20057028COPY extends IPlayer {
         bestColumnScore = Double.NEGATIVE_INFINITY; //Set the best column to track which move is best
         for (Location move: moves) {
             gameBoard.setLocationState(move, pmax.getPlayerState());
-            double score = negamax(gameBoard, DEPTH, Double.NEGATIVE_INFINITY, Double.POSITIVE_INFINITY, 1, pmax);
+            double score = -negamax(gameBoard, DEPTH, Double.NEGATIVE_INFINITY, Double.POSITIVE_INFINITY, 1, pmax);
             if (score >= bestColumnScore) {
                 bestColumn = move.getX();
                 if (Double.compare(bestColumnScore, score) == 0) {
@@ -88,7 +91,7 @@ public class ComputerPlayer20057028COPY extends IPlayer {
 
         boolean moreThanOne = false;
 
-        if (isWin(b, player)) return sign * -Integer.MAX_VALUE;
+        if (isWin(b, player)) return sign * Integer.MAX_VALUE;
 
         if (isDraw(b) || depth == 0) {
             return sign * eval(b, player);

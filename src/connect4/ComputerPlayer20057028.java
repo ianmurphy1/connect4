@@ -17,7 +17,7 @@ public class ComputerPlayer20057028 extends IPlayer {
     private Board gameBoard;
     private double bestColumnScore;
     private int bestColumn;
-    private final int DEPTH = 5; //Set higher to allow for deeper scans and harder AI
+    private final int DEPTH = 6; //Set higher to allow for deeper scans and harder AI
     private final int DIFFICULTY = 40; //Multiplier for scores to increase difficulty
 
 	public ComputerPlayer20057028(LocationState playerState) {
@@ -59,6 +59,9 @@ public class ComputerPlayer20057028 extends IPlayer {
         if (gameBoard.getLocationState(new Location(3, gameBoard.getNoRows() - 1)) == pmin.getPlayerState()
                 && gameBoard.getLocationState(new Location(2, gameBoard.getNoRows() - 1)) == LocationState.EMPTY)
             return 2;
+        else if (gameBoard.getLocationState(new Location(3, gameBoard.getNoRows() - 1)) == pmin.getPlayerState()
+            && gameBoard.getLocationState(new Location(2, gameBoard.getNoRows() - 1)) == pmax.getPlayerState())
+            return 3;
         // if col 3 and 2 had opponent tokens play 4
         else if (gameBoard.getLocationState(new Location(3, gameBoard.getNoRows() - 1)) == pmin.getPlayerState()
                 && gameBoard.getLocationState(new Location(2, gameBoard.getNoRows() - 1)) == pmin.getPlayerState()
