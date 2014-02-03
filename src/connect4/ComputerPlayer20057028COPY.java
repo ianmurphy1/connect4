@@ -65,7 +65,7 @@ public class ComputerPlayer20057028COPY extends IPlayer {
         bestColumnScore = Double.NEGATIVE_INFINITY; //Set the best column to track which move is best
         for (Location move: moves) {
             gameBoard.setLocationState(move, pmax.getPlayerState());
-            double score = -negamax(gameBoard, DEPTH, Double.NEGATIVE_INFINITY, Double.POSITIVE_INFINITY, 1, pmax);
+            double score = -negamax(gameBoard, DEPTH, Double.NEGATIVE_INFINITY, Double.POSITIVE_INFINITY, -1, pmax);
             if (score >= bestColumnScore) {
                 bestColumn = move.getX();
                 if (Double.compare(bestColumnScore, score) == 0) {
