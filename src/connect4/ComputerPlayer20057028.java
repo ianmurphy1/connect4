@@ -60,7 +60,8 @@ public class ComputerPlayer20057028 extends IPlayer {
                 && gameBoard.getLocationState(new Location(2, gameBoard.getNoRows() - 1)) == LocationState.EMPTY)
             return 2;
         else if (gameBoard.getLocationState(new Location(3, gameBoard.getNoRows() - 1)) == pmin.getPlayerState()
-            && gameBoard.getLocationState(new Location(2, gameBoard.getNoRows() - 1)) == pmax.getPlayerState())
+            && gameBoard.getLocationState(new Location(2, gameBoard.getNoRows() - 1)) == pmax.getPlayerState()
+                && gameBoard.getLocationState(new Location(3, gameBoard.getNoRows() - 2)) == LocationState.EMPTY)
             return 3;
         // if col 3 and 2 had opponent tokens play 4
         else if (gameBoard.getLocationState(new Location(3, gameBoard.getNoRows() - 1)) == pmin.getPlayerState()
@@ -69,12 +70,13 @@ public class ComputerPlayer20057028 extends IPlayer {
             return 4;
 
         ArrayList<Location> moves = getLegalMoves(gameBoard); // Get locations of legal moves
-        bestColumnScore = -Integer.MAX_VALUE; //Set the best column to track which move is best
+        bestColumnScore = -Double.MAX_VALUE; //Set the best column to track which move is best
         for (Location move: moves) {
             gameBoard.setLocationState(move, pmax.getPlayerState());
-            negamax(gameBoard, DEPTH, Double.NEGATIVE_INFINITY, Double.POSITIVE_INFINITY, -1, pmax);
+            negamax(gameBoard, DEPTH, -Double.MAX_VALUE, Double.MAX_VALUE, 1, pmax);
             gameBoard.setLocationState(move, LocationState.EMPTY);
         }
+        System.out.println("Best Score: " + bestColumnScore + "\nMove: " + bestColumn);
         int choice = bestColumn;
         return choice;
 	}
@@ -96,9 +98,13 @@ public class ComputerPlayer20057028 extends IPlayer {
      * @return The max score of a move made on the board.
      */
     private double negamax(Board b, int depth, double alpha, double beta, int sign, IPlayer player) {
-
+        System.out.println("Depth: " + depth + "\nAlpha: " + alpha + "\nBeta: " + beta + "\nBest Column Score: "
+                         + bestColumnScore + "Sign: " + sign + "Player State: "+ player.getPlayerState());
         boolean moreThanOne = false; // Used to check if more than one move is the same score
-        if (isWin(b, player)) return sign * Integer.MAX_VALUE; // Return highest possible value for a win.
+        if (isWin(b, player)) {
+            System.out.println("Win!");
+            return sign * Double.MAX_VALUE; // Return highest possible value for a win.
+        }
 
         /**
          * Changing this also brought changes to how the AI behaved
@@ -110,29 +116,33 @@ public class ComputerPlayer20057028 extends IPlayer {
         */
 
         if (isDraw(b) || depth == 0) {          // If the board is a draw or the depth
+            System.out.println("Reached here.");
             return sign * eval(b, player);      // the heuristic of the board.
         }
+
         IPlayer opp; //Player to represent the opponent in each call to negamax
         opp = (pmax.getPlayerState() == player.getPlayerState()) ? pmin : pmax;
-        double max = Double.NEGATIVE_INFINITY; // Set max to as low as possible
+        double max = Double.MIN_VALUE; // Set max to as low as possible
 
         ArrayList<Location> moves = getLegalMoves(b); // Get the legal moves for the board at this state
         ArrayList<Location> dupes = new ArrayList<Location>(); //Holding area for moves with the same score
         for (Location move : moves) {
             b.setLocationState(move, player.getPlayerState());  //Make the move
-            double x = -negamax(b, depth - 1, beta * -1, alpha * -1, sign * -1, opp);  //Recursive call that returns the max score for each move
+            //System.out.println("Move at: " + move.getX());
+            double x = -negamax(b, (depth - 1), beta * -1, alpha * -1, sign * -1, opp);  //Recursive call that returns the max score for each move
+
             b.setLocationState(move, LocationState.EMPTY); //Undo the move
             if (x > max) {
                 max = x;
-                if (x >= bestColumnScore) {  //If score form negamax is better than the current column score
-                    bestColumnScore = x;    //change the best column score
+                if (x >= bestColumnScore) {   //If score form negamax is better than the current column score
+                    bestColumnScore = x;      //change the best column score
                     bestColumn = move.getX(); //Take this move as the best
+                    System.out.println("Score: " + bestColumnScore + "\nMove: " + bestColumn);
                     if (Double.compare(bestColumnScore, x) == 0) {
                         moreThanOne = true;
                         dupes.add(move);
                     }
                 }
-
             }
             if (moreThanOne) { //If there's more than one move with the same score, pick it at random.
                 Random rand = new Random();
@@ -180,7 +190,6 @@ public class ComputerPlayer20057028 extends IPlayer {
                         && b.getLocationState(new Location(i + 2, j + 2)) == p.getPlayerState()
                         && b.getLocationState(new Location(i + 3, j + 3)) == p.getPlayerState())
                     return true;
-
             }
         }
 
@@ -250,13 +259,13 @@ public class ComputerPlayer20057028 extends IPlayer {
      * @param p The current player.
      * @return A score for the boards value.
      */
-    public int eval(Board b, IPlayer p) {
+    public double eval(Board b, IPlayer p) {
 
         int score = 0;
         //Multipliers based on whether possible rows are vertical, horizontal or diagonal
         int v = 10, h = 15, d = 5;
         //Scores for tokens in a row
-        int oneInRow = 2, twoInRow = 50, threeInRow = 150;
+        int oneInRow = 2, twoInRow = 15, threeInRow = 50;
 
         /******************************************************************************
          *                                                                            *
@@ -293,31 +302,31 @@ public class ComputerPlayer20057028 extends IPlayer {
                         && b.getLocationState(new Location(i + 3, j)) == LocationState.EMPTY)
                     score += twoInRow * h;
                 //(x0x0)
-                else if (b.getLocationState(new Location(i, j)) == p.getPlayerState()
+                if (b.getLocationState(new Location(i, j)) == p.getPlayerState()
                         && b.getLocationState(new Location(i + 2, j)) == p.getPlayerState()
                         && b.getLocationState(new Location(i + 1, j)) == LocationState.EMPTY
                         && b.getLocationState(new Location(i + 3, j)) == LocationState.EMPTY)
                     score += twoInRow * h;
                 //(x00x)
-                else if (b.getLocationState(new Location(i, j)) == p.getPlayerState()
+                if (b.getLocationState(new Location(i, j)) == p.getPlayerState()
                         && b.getLocationState(new Location(i + 3, j)) == p.getPlayerState()
                         && b.getLocationState(new Location(i + 1, j)) == LocationState.EMPTY
                         && b.getLocationState(new Location(i + 2, j)) == LocationState.EMPTY)
                     score += twoInRow * h;
                 //(0xx0)
-                else if (b.getLocationState(new Location(i, j)) == LocationState.EMPTY
+                if (b.getLocationState(new Location(i, j)) == LocationState.EMPTY
                         && b.getLocationState(new Location(i + 3, j)) == LocationState.EMPTY
                         && b.getLocationState(new Location(i + 1, j)) == p.getPlayerState()
                         && b.getLocationState(new Location(i + 2, j)) == p.getPlayerState())
                     score += twoInRow * h;
                 //(0x0x)
-                else if (b.getLocationState(new Location(i, j)) == LocationState.EMPTY
+                if (b.getLocationState(new Location(i, j)) == LocationState.EMPTY
                         && b.getLocationState(new Location(i + 2, j)) == LocationState.EMPTY
                         && b.getLocationState(new Location(i + 1, j)) == p.getPlayerState()
                         && b.getLocationState(new Location(i + 3, j)) == p.getPlayerState())
                     score += twoInRow * h;
                 //(00xx)
-                else if (b.getLocationState(new Location(i, j)) == LocationState.EMPTY
+                if (b.getLocationState(new Location(i, j)) == LocationState.EMPTY
                         && b.getLocationState(new Location(i + 1, j)) == LocationState.EMPTY
                         && b.getLocationState(new Location(i + 2, j)) == p.getPlayerState()
                         && b.getLocationState(new Location(i + 3, j)) == p.getPlayerState())
@@ -355,7 +364,7 @@ public class ComputerPlayer20057028 extends IPlayer {
                 //   0
                 //  0
                 // x
-                else if (b.getLocationState(new Location(i, j)) == p.getPlayerState()
+                if (b.getLocationState(new Location(i, j)) == p.getPlayerState()
                         && b.getLocationState(new Location(i - 3, j + 3)) == p.getPlayerState()
                         && b.getLocationState(new Location(i - 1, j + 1)) == LocationState.EMPTY
                         && b.getLocationState(new Location(i - 2, j + 2)) == LocationState.EMPTY)
@@ -364,7 +373,7 @@ public class ComputerPlayer20057028 extends IPlayer {
                 //   x
                 //  x
                 // 0
-                else if (b.getLocationState(new Location(i, j)) == LocationState.EMPTY
+                if (b.getLocationState(new Location(i, j)) == LocationState.EMPTY
                         && b.getLocationState(new Location(i - 3, j + 3)) == LocationState.EMPTY
                         && b.getLocationState(new Location(i - 1, j + 1)) == p.getPlayerState()
                         && b.getLocationState(new Location(i - 2, j + 2)) == p.getPlayerState())
@@ -373,7 +382,7 @@ public class ComputerPlayer20057028 extends IPlayer {
                 //   x
                 //  0
                 // x
-                else if (b.getLocationState(new Location(i, j)) == LocationState.EMPTY
+                if (b.getLocationState(new Location(i, j)) == LocationState.EMPTY
                         && b.getLocationState(new Location(i - 2, j + 2)) == LocationState.EMPTY
                         && b.getLocationState(new Location(i - 1, j + 1)) == p.getPlayerState()
                         && b.getLocationState(new Location(i - 3, j + 3)) == p.getPlayerState())
@@ -382,7 +391,7 @@ public class ComputerPlayer20057028 extends IPlayer {
                 //   0
                 //  x
                 // x
-                else if (b.getLocationState(new Location(i, j)) == LocationState.EMPTY
+                if (b.getLocationState(new Location(i, j)) == LocationState.EMPTY
                         && b.getLocationState(new Location(i - 1, j + 1)) == LocationState.EMPTY
                         && b.getLocationState(new Location(i - 2, j + 2)) == p.getPlayerState()
                         && b.getLocationState(new Location(i - 3, j + 3)) == p.getPlayerState())
@@ -391,7 +400,7 @@ public class ComputerPlayer20057028 extends IPlayer {
                 //   0
                 //  x
                 // 0
-                else if (b.getLocationState(new Location(i, j)) == p.getPlayerState()
+                if (b.getLocationState(new Location(i, j)) == p.getPlayerState()
                         && b.getLocationState(new Location(i - 2, j + 2)) == p.getPlayerState()
                         && b.getLocationState(new Location(i - 1, j + 1)) == LocationState.EMPTY
                         && b.getLocationState(new Location(i - 3, j + 3)) == LocationState.EMPTY)
@@ -415,7 +424,7 @@ public class ComputerPlayer20057028 extends IPlayer {
                 //  0
                 //   0
                 //    x
-                else if (b.getLocationState(new Location(i, j)) == p.getPlayerState()
+                if (b.getLocationState(new Location(i, j)) == p.getPlayerState()
                         && b.getLocationState(new Location(i + 3, j + 3)) == p.getPlayerState()
                         && b.getLocationState(new Location(i + 1, j + 1)) == LocationState.EMPTY
                         && b.getLocationState(new Location(i + 2, j + 2)) == LocationState.EMPTY)
@@ -424,7 +433,7 @@ public class ComputerPlayer20057028 extends IPlayer {
                 //  x
                 //   x
                 //    0
-                else if (b.getLocationState(new Location(i, j)) == LocationState.EMPTY
+                if (b.getLocationState(new Location(i, j)) == LocationState.EMPTY
                         && b.getLocationState(new Location(i + 3, j + 3)) == LocationState.EMPTY
                         && b.getLocationState(new Location(i + 1, j + 1)) == p.getPlayerState()
                         && b.getLocationState(new Location(i + 2, j + 2)) == p.getPlayerState())
@@ -433,7 +442,7 @@ public class ComputerPlayer20057028 extends IPlayer {
                 //  x
                 //   0
                 //    x
-                else if (b.getLocationState(new Location(i, j)) == LocationState.EMPTY
+                if (b.getLocationState(new Location(i, j)) == LocationState.EMPTY
                         && b.getLocationState(new Location(i + 2, j + 2)) == LocationState.EMPTY
                         && b.getLocationState(new Location(i + 1, j + 1)) == p.getPlayerState()
                         && b.getLocationState(new Location(i + 3, j + 3)) == p.getPlayerState())
@@ -442,7 +451,7 @@ public class ComputerPlayer20057028 extends IPlayer {
                 //  0
                 //   x
                 //    x
-                else if (b.getLocationState(new Location(i, j)) == LocationState.EMPTY
+                if (b.getLocationState(new Location(i, j)) == LocationState.EMPTY
                         && b.getLocationState(new Location(i + 1, j + 1)) == LocationState.EMPTY
                         && b.getLocationState(new Location(i + 2, j + 2)) == p.getPlayerState()
                         && b.getLocationState(new Location(i + 3, j + 3)) == p.getPlayerState())
@@ -451,7 +460,7 @@ public class ComputerPlayer20057028 extends IPlayer {
                 //  0
                 //   x
                 //    0
-                else if (b.getLocationState(new Location(i, j)) == p.getPlayerState()
+                if (b.getLocationState(new Location(i, j)) == p.getPlayerState()
                         && b.getLocationState(new Location(i + 2, j + 2)) == p.getPlayerState()
                         && b.getLocationState(new Location(i + 1, j + 1)) == LocationState.EMPTY
                         && b.getLocationState(new Location(i + 3, j + 3)) == LocationState.EMPTY)
@@ -475,18 +484,18 @@ public class ComputerPlayer20057028 extends IPlayer {
                         && b.getLocationState(new Location(i + 3, j)) == LocationState.EMPTY)
                     score += threeInRow * h;
                 // (xx0x)
-                else if (b.getLocationState(new Location(i, j)) == p.getPlayerState()
+                if (b.getLocationState(new Location(i, j)) == p.getPlayerState()
                         && b.getLocationState(new Location(i + 1, j)) == p.getPlayerState()
                         && b.getLocationState(new Location(i + 3, j)) == p.getPlayerState()
                         && b.getLocationState(new Location(i + 2, j)) == LocationState.EMPTY)
                     score += threeInRow * h;
                 // (x0xx)
-                else if (b.getLocationState(new Location(i, j))== p.getPlayerState()
+                if (b.getLocationState(new Location(i, j))== p.getPlayerState()
                         && b.getLocationState(new Location(i + 2, j)) == p.getPlayerState()
                         && b.getLocationState(new Location(i + 3, j)) == p.getPlayerState()
                         && b.getLocationState(new Location(i + 1, j)) == LocationState.EMPTY)
                     score += threeInRow * h;
-                else if (b.getLocationState(new Location(i, j))== LocationState.EMPTY
+                if (b.getLocationState(new Location(i, j))== LocationState.EMPTY
                         && b.getLocationState(new Location(i + 1, j)) == p.getPlayerState()
                         && b.getLocationState(new Location(i + 2, j)) == p.getPlayerState()
                         && b.getLocationState(new Location(i + 3, j)) == p.getPlayerState())
@@ -526,7 +535,7 @@ public class ComputerPlayer20057028 extends IPlayer {
                 //   x
                 //  0
                 // x
-                else if (b.getLocationState(new Location(i, j)) == p.getPlayerState()
+                if (b.getLocationState(new Location(i, j)) == p.getPlayerState()
                         && b.getLocationState(new Location(i - 1, j + 1)) == p.getPlayerState()
                         && b.getLocationState(new Location(i - 3, j + 3)) == p.getPlayerState()
                         && b.getLocationState(new Location(i - 2, j + 2)) == LocationState.EMPTY)
@@ -535,7 +544,7 @@ public class ComputerPlayer20057028 extends IPlayer {
                 //   x
                 //  x
                 // x
-                else if (b.getLocationState(new Location(i, j)) == LocationState.EMPTY
+                if (b.getLocationState(new Location(i, j)) == LocationState.EMPTY
                         && b.getLocationState(new Location(i - 1, j + 1)) == p.getPlayerState()
                         && b.getLocationState(new Location(i - 2, j + 2)) == p.getPlayerState()
                         && b.getLocationState(new Location(i - 3, j + 3)) == p.getPlayerState())
@@ -544,7 +553,7 @@ public class ComputerPlayer20057028 extends IPlayer {
                 //   0
                 //  x
                 // x
-                else if (b.getLocationState(new Location(i, j)) == p.getPlayerState()
+                if (b.getLocationState(new Location(i, j)) == p.getPlayerState()
                         && b.getLocationState(new Location(i - 2, j + 2)) == p.getPlayerState()
                         && b.getLocationState(new Location(i - 3, j + 3)) == p.getPlayerState()
                         && b.getLocationState(new Location(i - 1, j + 1)) == LocationState.EMPTY)
@@ -568,7 +577,7 @@ public class ComputerPlayer20057028 extends IPlayer {
                 //  x
                 //   0
                 //    x
-                else if (b.getLocationState(new Location(i, j)) == p.getPlayerState()
+                if (b.getLocationState(new Location(i, j)) == p.getPlayerState()
                         && b.getLocationState(new Location(i + 1, j + 1)) == p.getPlayerState()
                         && b.getLocationState(new Location(i + 3, j + 3)) == p.getPlayerState()
                         && b.getLocationState(new Location(i + 2, j + 2)) == LocationState.EMPTY)
@@ -577,7 +586,7 @@ public class ComputerPlayer20057028 extends IPlayer {
                 //  x
                 //   x
                 //    x
-                else if (b.getLocationState(new Location(i, j)) == LocationState.EMPTY
+                if (b.getLocationState(new Location(i, j)) == LocationState.EMPTY
                         && b.getLocationState(new Location(i + 1, j + 1)) == p.getPlayerState()
                         && b.getLocationState(new Location(i + 2, j + 2)) == p.getPlayerState()
                         && b.getLocationState(new Location(i + 3, j + 3)) == p.getPlayerState())
@@ -586,7 +595,7 @@ public class ComputerPlayer20057028 extends IPlayer {
                 //  0
                 //   x
                 //    x
-                else if (b.getLocationState(new Location(i, j)) == p.getPlayerState()
+                if (b.getLocationState(new Location(i, j)) == p.getPlayerState()
                         && b.getLocationState(new Location(i + 2, j + 2)) == p.getPlayerState()
                         && b.getLocationState(new Location(i + 3, j + 3)) == p.getPlayerState()
                         && b.getLocationState(new Location(i + 1, j + 1)) == LocationState.EMPTY)
